@@ -1,0 +1,5 @@
+# .gitignore
+.env
+*_jira_config.json
+__pycache__/
+venv/
