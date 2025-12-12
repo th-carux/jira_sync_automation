@@ -6,8 +6,8 @@ import requests
 import json
 import os
 
-# 從 carux_jira_config.json 讀取設定
-CONFIG_FILE = "carux_jira_config.json"
+# 從 jira_config_carux.json 讀取設定
+CONFIG_FILE = "jira_config_carux.json"
 
 if not os.path.exists(CONFIG_FILE):
     raise FileNotFoundError(f"錯誤：找不到 {CONFIG_FILE}，請確認檔案存在")
@@ -17,6 +17,7 @@ try:
         config = json.load(f)
         cloud_id = config.get("cloud_id")
         api_token = config.get("api_token")
+        project_key = config.get("project_key")
 except Exception as e:
     raise ValueError(f"錯誤：無法讀取 {CONFIG_FILE}: {e}")
 
@@ -27,8 +28,8 @@ if not cloud_id:
 if not api_token:
     raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 api_token")
 
-# 專案 Key
-PROJECT_KEY = "DM"
+if not project_key:
+    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 project_key")
 
 def get_project_info(cloud_id, project_key, api_token):
     """取得專案資訊"""
@@ -50,6 +51,30 @@ def get_project_info(cloud_id, project_key, api_token):
         return project_data
     else:
         print(f"取得專案資訊失敗 (Status {response.status_code}): {response.text}")
+        return None
+
+def get_issue_details(cloud_id, issue_key, api_token):
+    """取得單個 Issue 的詳細資訊（包含 comments 和 attachments）"""
+    url = f"https://api.atlassian.com/ex/jira/{cloud_id}/rest/api/3/issue/{issue_key}"
+
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Accept": "application/json"
+    }
+
+    params = {
+        "fields": "comment,attachment"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"  警告: 無法取得 {issue_key} 的詳細資訊 (Status {response.status_code})")
+            return None
+    except Exception as e:
+        print(f"  警告: 取得 {issue_key} 詳細資訊時發生錯誤: {str(e)}")
         return None
 
 def get_all_issues(cloud_id, project_key, api_token, max_results=100):
@@ -76,7 +101,7 @@ def get_all_issues(cloud_id, project_key, api_token, max_results=100):
             "jql": f"project = {project_key}",
             "maxResults": max_results,
             "startAt": start_at,
-            "fields": "summary,status,assignee,created,updated,priority,issuetype"
+            "fields": "summary,status,assignee,created,updated,priority,issuetype,comment,attachment"
         }
 
         response = requests.get(url, headers=headers, params=params)
@@ -86,20 +111,76 @@ def get_all_issues(cloud_id, project_key, api_token, max_results=100):
             break
 
         data = response.json()
+
+        # 只在第一次請求時打印完整的數據結構
+        if start_at == 0:
+            print("\n" + "=" * 80)
+            print("API 回應數據結構與內容:")
+            print("=" * 80)
+            print(f"請求 URL: {response.url}")
+            print(f"狀態碼: {response.status_code}")
+            print("\n完整 JSON 結構:")
+            print(json.dumps(data, indent=2, ensure_ascii=False))
+            print("\n數據結構分析:")
+            print(f"  - 頂層鍵值: {list(data.keys())}")
+            for key in data.keys():
+                value = data[key]
+                if isinstance(value, list):
+                    print(f"  - {key}: 列表，長度 = {len(value)}")
+                    if len(value) > 0:
+                        print(f"    第一個元素類型: {type(value[0])}")
+                        if isinstance(value[0], dict):
+                            print(f"    第一個元素的鍵: {list(value[0].keys())}")
+                elif isinstance(value, dict):
+                    print(f"  - {key}: 字典，鍵 = {list(value.keys())}")
+                else:
+                    print(f"  - {key}: {type(value).__name__} = {value}")
+            print("=" * 80 + "\n")
+
+        # 新版本 API 沒有 total 字段，從 issues 列表獲取
         issues = data.get("issues", [])
-        total = data.get("total", 0)
 
         if not issues:
             break
 
         all_issues.extend(issues)
-        print(f"已取得 {len(all_issues)} / {total} 個 Issue...")
+
+        # 由於沒有 total 字段，使用當前已取得的數量顯示進度
+        # 如果返回的 issues 數量等於 max_results，可能還有更多
+        print(f"已取得 {len(all_issues)} 個 Issue... (本批次: {len(issues)} 個)")
 
         # 檢查是否還有更多 issue
-        if len(all_issues) >= total or len(issues) < max_results:
+        # 如果返回的 issues 數量小於 max_results，說明已經取得所有資料
+        if len(issues) < max_results:
             break
 
         start_at += max_results
+
+    # 總數就是實際取得的 issues 數量
+    total = len(all_issues)
+
+    # 為每個 issue 補充 comments 和 attachments 資訊
+    if total > 0:
+        print(f"\n正在取得 {total} 個 Issue 的詳細資訊（comments 和 attachments）...")
+        for i, issue in enumerate(all_issues, 1):
+            issue_key = issue.get('key')
+            print(f"  處理中 ({i}/{total}): {issue_key}...", end='\r')
+
+            details = get_issue_details(cloud_id, issue_key, api_token)
+            if details and 'fields' in details:
+                # 補充 comments 資訊
+                if 'comment' in details['fields']:
+                    if 'fields' not in issue:
+                        issue['fields'] = {}
+                    issue['fields']['comment'] = details['fields']['comment']
+
+                # 補充 attachments 資訊
+                if 'attachment' in details['fields']:
+                    if 'fields' not in issue:
+                        issue['fields'] = {}
+                    issue['fields']['attachment'] = details['fields']['attachment']
+
+        print(f"  完成！已取得所有 Issue 的詳細資訊。{' ' * 50}")
 
     return all_issues, total
 
@@ -123,15 +204,15 @@ def main():
     print("取得 DM 專案的所有 Issue 清單")
     print("=" * 60)
     print(f"Cloud ID: {cloud_id}")
-    print(f"專案 Key: {PROJECT_KEY}")
+    print(f"專案 Key: {project_key}")
     print()
 
     # 1. 先取得專案資訊（可選，用於驗證）
-    project_info = get_project_info(cloud_id, PROJECT_KEY, api_token)
+    project_info = get_project_info(cloud_id, project_key, api_token)
     print()
 
     # 2. 取得所有 Issue
-    issues, total = get_all_issues(cloud_id, PROJECT_KEY, api_token)
+    issues, total = get_all_issues(cloud_id, project_key, api_token)
 
     print()
     print("=" * 60)
@@ -158,10 +239,10 @@ def main():
         print("沒有找到任何 Issue")
 
     # 4. 將結果儲存為 JSON 檔案（可選）
-    output_file = "dm_issues.json"
+    output_file = f"carux_{project_key}_issues.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump({
-            "project_key": PROJECT_KEY,
+            "project_key": project_key,
             "total": total,
             "count": len(issues),
             "issues": issues

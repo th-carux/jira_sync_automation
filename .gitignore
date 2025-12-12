@@ -3,3 +3,4 @@
 *_jira_config.json
 __pycache__/
 venv/
+*config*.json
