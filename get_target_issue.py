@@ -1,10 +1,14 @@
+"""
+取得 Target 專案的所有 Issue 清單
+使用 jira_config.json 檔案中的 target 配置進行認證
+"""
 import requests
 import json
 import os
 import base64
 
-# 從 jira_config_yoruni.json 讀取設定
-CONFIG_FILE = "jira_config_yoruni.json"
+# 從 jira_config.json 讀取設定
+CONFIG_FILE = "jira_config.json"
 
 if not os.path.exists(CONFIG_FILE):
     raise FileNotFoundError(f"錯誤：找不到 {CONFIG_FILE}，請確認檔案存在")
@@ -12,79 +16,75 @@ if not os.path.exists(CONFIG_FILE):
 try:
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         config = json.load(f)
-        domain = config.get("domain")
-        email = config.get("email")
-        api_token = config.get("api_token")
-        project_key = config.get("project_key")
+        target_config = config.get("target", {})
 except Exception as e:
     raise ValueError(f"錯誤：無法讀取 {CONFIG_FILE}: {e}")
 
+if not target_config:
+    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 target 配置")
+
+# 讀取 target 配置值（使用 camelCase）
+auth_type = target_config.get("authType", "Bearer")
+cloud_id = target_config.get("cloudId")
+api_token = target_config.get("apiToken")
+project_key = target_config.get("projectKey")
+domain = target_config.get("domain")
+email = target_config.get("email")
+
 # 檢查必要的設定值
-if not domain:
-    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 domain")
-
-if not email:
-    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 email（域名格式的 API 需要 email 進行 Basic Auth）")
-
 if not api_token:
-    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 api_token")
+    raise ValueError(f"錯誤：{CONFIG_FILE} 的 target 配置中找不到 apiToken")
 
 if not project_key:
-    raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 project_key")
+    raise ValueError(f"錯誤：{CONFIG_FILE} 的 target 配置中找不到 projectKey")
 
-# 構建基礎 API URL
-# 處理 domain 可能已經包含協議的情況
-if domain.startswith("http://") or domain.startswith("https://"):
-    # 如果已經包含協議，直接使用
-    base_domain = domain.rstrip("/")
-else:
-    # 如果沒有協議，添加 https://
-    base_domain = f"https://{domain}"
+# 根據 authType 構建 API URL 和驗證配置
+if auth_type == "Basic":
+    if not domain:
+        raise ValueError(f"錯誤：{CONFIG_FILE} 的 target 配置中找不到 domain（Basic Auth 需要）")
+    if not email:
+        raise ValueError(f"錯誤：{CONFIG_FILE} 的 target 配置中找不到 email（Basic Auth 需要）")
 
-BASE_URL = f"{base_domain}/rest/api/3"
-
-def get_auth_headers(email, api_token):
-    """生成 Basic Auth 認證標頭"""
-    # Basic Auth: base64(email:api_token)
-    credentials = f"{email}:{api_token}"
-    encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
-    return {
-        "Authorization": f"Basic {encoded_credentials}",
-        "Accept": "application/json"
-    }
-
-def get_all_projects(base_url, email, api_token):
-    """取得所有專案清單"""
-    url = f"{base_url}/project"
-    headers = get_auth_headers(email, api_token)
-
-    print("正在取得所有專案清單...")
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        projects = response.json()
-        print(f"\n找到 {len(projects)} 個專案：")
-        print("=" * 80)
-        print(f"{'專案 Key':<15} {'專案名稱':<40} {'專案 ID':<15} {'專案類型':<15}")
-        print("-" * 80)
-
-        for project in projects:
-            project_key = project.get('key', 'N/A')
-            project_name = project.get('name', 'N/A')
-            project_id = project.get('id', 'N/A')
-            project_type = project.get('projectTypeKey', 'N/A')
-            print(f"{project_key:<15} {project_name:<40} {project_id:<15} {project_type:<15}")
-
-        print("=" * 80)
-        return projects
+    # 處理 domain 可能已經包含協議的情況
+    if domain.startswith("http://") or domain.startswith("https://"):
+        base_domain = domain.rstrip("/")
     else:
-        print(f"取得專案清單失敗 (Status {response.status_code}): {response.text}")
-        return []
+        base_domain = f"https://{domain}"
 
-def get_project_info(base_url, project_key, email, api_token):
+    BASE_URL = f"{base_domain}/rest/api/3"
+elif auth_type == "Bearer":
+    if not cloud_id:
+        raise ValueError(f"錯誤：{CONFIG_FILE} 的 target 配置中找不到 cloudId（Bearer Auth 需要）")
+
+    BASE_URL = f"https://api.atlassian.com/ex/jira/{cloud_id}/rest/api/3"
+else:
+    raise ValueError(f"錯誤：不支援的 authType: {auth_type}，只支援 Basic 或 Bearer")
+
+def get_auth_headers(auth_type, api_token, email=None):
+    """根據 authType 生成對應的認證標頭"""
+    if auth_type == "Basic":
+        if not email:
+            raise ValueError("Basic Auth 需要 email 參數")
+        # Basic Auth: base64(email:api_token)
+        credentials = f"{email}:{api_token}"
+        encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
+        return {
+            "Authorization": f"Basic {encoded_credentials}",
+            "Accept": "application/json"
+        }
+    elif auth_type == "Bearer":
+        return {
+            "Authorization": f"Bearer {api_token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+    else:
+        raise ValueError(f"不支援的 authType: {auth_type}")
+
+def get_project_info(base_url, project_key, auth_type, api_token, email=None):
     """取得專案資訊"""
     url = f"{base_url}/project/{project_key}"
-    headers = get_auth_headers(email, api_token)
+    headers = get_auth_headers(auth_type, api_token, email)
 
     print(f"正在取得專案 {project_key} 的資訊...")
     response = requests.get(url, headers=headers)
@@ -99,10 +99,10 @@ def get_project_info(base_url, project_key, email, api_token):
         print(f"取得專案資訊失敗 (Status {response.status_code}): {response.text}")
         return None
 
-def get_issue_details(base_url, issue_key, email, api_token):
+def get_issue_details(base_url, issue_key, auth_type, api_token, email=None):
     """取得單個 Issue 的詳細資訊（包含 comments 和 attachments）"""
     url = f"{base_url}/issue/{issue_key}"
-    headers = get_auth_headers(email, api_token)
+    headers = get_auth_headers(auth_type, api_token, email)
 
     params = {
         "fields": "comment,attachment"
@@ -119,13 +119,13 @@ def get_issue_details(base_url, issue_key, email, api_token):
         print(f"  警告: 取得 {issue_key} 詳細資訊時發生錯誤: {str(e)}")
         return None
 
-def get_all_issues(base_url, project_key, email, api_token, max_results=100):
+def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_results=100):
     """
     取得指定專案的所有 Issue 清單
     使用 Jira Search API (新版本 /rest/api/3/search/jql) 來取得所有 issue
     """
     url = f"{base_url}/search/jql"
-    headers = get_auth_headers(email, api_token)
+    headers = get_auth_headers(auth_type, api_token, email)
 
     all_issues = []
     start_at = 0
@@ -204,7 +204,7 @@ def get_all_issues(base_url, project_key, email, api_token, max_results=100):
             issue_key = issue.get('key')
             print(f"  處理中 ({i}/{total}): {issue_key}...", end='\r')
 
-            details = get_issue_details(base_url, issue_key, email, api_token)
+            details = get_issue_details(BASE_URL, issue_key, auth_type, api_token, email)
             if details and 'fields' in details:
                 # 補充 comments 資訊
                 if 'comment' in details['fields']:
@@ -239,28 +239,27 @@ def format_issue_info(issue):
 def main():
     """主程式"""
     print("=" * 60)
-    print("Jira 專案與 Issue 管理工具")
+    print("Jira 專案與 Issue 管理工具 (Target)")
     print("=" * 60)
-    print(f"Domain: {domain}")
+    print(f"Auth Type: {auth_type}")
+    if auth_type == "Basic":
+        print(f"Domain: {domain}")
+    elif auth_type == "Bearer":
+        print(f"Cloud ID: {cloud_id}")
     print(f"Base URL: {BASE_URL}")
+    print(f"Project Key: {project_key}")
     print()
 
-    # 0. 先列出所有專案清單
-    all_projects = get_all_projects(BASE_URL, email, api_token)
+    # 1. 先取得專案資訊（可選，用於驗證）
+    project_info = get_project_info(BASE_URL, project_key, auth_type, api_token, email)
     print()
 
-    # 1. 取得指定專案資訊（可選，用於驗證）
-    print(f"正在處理專案: {project_key}")
-    project_info = get_project_info(BASE_URL, project_key, email, api_token)
-    print()
-
-    # 2. 取得指定專案的所有 Issue
-    print(f"正在取得專案 {project_key} 的所有 Issue...")
-    issues, total = get_all_issues(BASE_URL, project_key, email, api_token)
+    # 2. 取得所有 Issue
+    issues, total = get_all_issues(BASE_URL, project_key, auth_type, api_token, email)
 
     print()
     print("=" * 60)
-    print(f"專案 {project_key} - 共取得 {len(issues)} 個 Issue（總數: {total}）")
+    print(f"共取得 {len(issues)} 個 Issue（總數: {total}）")
     print("=" * 60)
     print()
 
@@ -282,8 +281,9 @@ def main():
     else:
         print("沒有找到任何 Issue")
 
-    # 4. 將結果儲存為 JSON 檔案（可選）
-    output_file = f"yoruni_{project_key}_issues.json"
+    # 4. 將結果儲存為 JSON 檔案
+    target_name = target_config.get("name", "target")
+    output_file = f"{target_name.lower()}_{project_key}_issues.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump({
             "project_key": project_key,
