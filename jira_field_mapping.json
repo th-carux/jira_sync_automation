@@ -1,6 +1,6 @@
 [
   {
-    "fieldType": "system",
+    "type": "system",
     "fieldId": "priority",
     "syncDirection": "S2T",
     "strategy": "MAPPED_SYNC",
@@ -11,14 +11,14 @@
     }
   },
   {
-    "fieldType": "system",
+    "type": "system",
     "fieldId": "summary",
     "syncDirection": "S2T",
     "strategy": "DIRECT_COPY",
     "note": "Add prefix [MB-EAL] in the summary to indicate bug is coming from customer"
   },
   {
-    "fieldType": "system",
+    "type": "system",
     "fieldId": "status",
     "syncDirection": "BIDIRECTIONAL",
     "strategy": "MAPPED_SYNC",
@@ -41,23 +41,23 @@
     }
   },
   {
-    "fieldType": "system",
+    "type": "system",
     "fieldId": "attachment",
     "syncDirection": "BIDIRECTIONAL",
     "strategy": "DIRECT_COPY",
     "note": "attachment filed need to be synced with perticular method"
   },
   {
-    "fieldType": "custom",
-    "fieldDescription": "Description to Description_Bug",
+    "type": "custom",
+    "description": "Description -> Description_Bug",
     "sourceFieldId": "description",
     "targetFieldId": "customfield_10262",
     "syncDirection": "S2T",
     "strategy": "DIRECT_COPY"
   },
   {
-    "fieldType": "custom",
-    "fieldDescription": "Severity",
+    "type": "custom",
+    "description": "Severity -> Severity",
     "sourceFieldId": "customfield_10037",
     "targetFieldId": "customfield_10229",
     "syncDirection": "S2T",
@@ -71,37 +71,57 @@
     }
   },
   {
-    "fieldType": "custom",
-    "fieldDescription": "Root Cause to Root Cause Analysis",
+    "type": "custom",
+    "description": "Root Cause <-> Root Cause Analysis",
     "sourceFieldId": "customfield_10045",
     "targetFieldId": "customfield_10294",
     "syncDirection": "BIDIRECTIONAL",
     "strategy": "DIRECT_COPY"
   },
   {
-    "fieldType": "custom",
-    "fieldDescription": "Origin (Static Value on Create)",
+    "type": "custom",
+    "description": "Origin (Static Value on Create)",
     "sourceFieldId": null,
     "targetFieldId": "customfield_10223",
-    "sync_direction": "S2T",
+    "syncDirection": "S2T",
     "strategy": "STATIC_VALUE",
     "trigger_on": ["CREATE"],
     "static_value": {
        "value": "Customer"
     },
-    "note": "僅在建立 Target Issue 時填入"
+    "note": "Only fill in on Target Issue creation"
   },
   {
-    "fieldType": "custom",
-    "fieldDescription": "Detection Phase (Static Value on Create)",
+    "type": "custom",
+    "description": "Detection Phase (Static Value on Create)",
     "sourceFieldId": null,
     "targetFieldId": "customfield_10216",
-    "sync_direction": "S2T",
+    "syncDirection": "S2T",
     "strategy": "STATIC_VALUE",
     "trigger_on": ["CREATE"],
     "static_value": {
        "value": "Customer Test"
     },
-    "note": "僅在建立 Target Issue 時填入"
+    "note": "Only fill in on Target Issue creation"
+  },
+  {
+    "type": "custom",
+    "description": "Customer Issue ID (Sync Metadata)",
+    "sourceFieldId": null,
+    "targetFieldId": "customfield_10705",
+    "syncDirection": "S2T",
+    "strategy": "SYNC_METADATA",
+    "metadataType": "customer_issue_id",
+    "note": "Stores the source issue key/ID for sync tracking"
+  },
+  {
+    "type": "custom",
+    "description": "Last Sync Time (Sync Metadata)",
+    "sourceFieldId": null,
+    "targetFieldId": "customfield_10476",
+    "syncDirection": "S2T",
+    "strategy": "SYNC_METADATA",
+    "metadataType": "last_sync_time",
+    "note": "Stores the timestamp of the last sync operation"
   }
 ]

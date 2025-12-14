@@ -1,0 +1,1480 @@
+{
+  "project_key": "TONYTEST",
+  "total": 1,
+  "count": 1,
+  "issues": [
+    {
+      "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations,customfield_16172.cmdb.label,customfield_16172.cmdb.objectKey,customfield_16172.cmdb.attributes,customfield_16179.cmdb.label,customfield_16179.cmdb.objectKey,customfield_16179.cmdb.attributes,customfield_11953.cmdb.label,customfield_11953.cmdb.objectKey,customfield_11953.cmdb.attributes,customfield_12922.cmdb.label,customfield_12922.cmdb.objectKey,customfield_12922.cmdb.attributes,customfield_16290.cmdb.label,customfield_16290.cmdb.objectKey,customfield_16290.cmdb.attributes,customfield_16281.cmdb.label,customfield_16281.cmdb.objectKey,customfield_16281.cmdb.attributes,customfield_16288.cmdb.label,customfield_16288.cmdb.objectKey,customfield_16288.cmdb.attributes,customfield_27081.cmdb.label,customfield_27081.cmdb.objectKey,customfield_27081.cmdb.attributes,customfield_16280.cmdb.label,customfield_16280.cmdb.objectKey,customfield_16280.cmdb.attributes,customfield_20404.cmdb.label,customfield_20404.cmdb.objectKey,customfield_20404.cmdb.attributes,customfield_20405.cmdb.label,customfield_20405.cmdb.objectKey,customfield_20405.cmdb.attributes,customfield_20403.cmdb.label,customfield_20403.cmdb.objectKey,customfield_20403.cmdb.attributes,customfield_20401.cmdb.label,customfield_20401.cmdb.objectKey,customfield_20401.cmdb.attributes,customfield_16269.cmdb.label,customfield_16269.cmdb.objectKey,customfield_16269.cmdb.attributes,customfield_16268.cmdb.label,customfield_16268.cmdb.objectKey,customfield_16268.cmdb.attributes,customfield_16251.cmdb.label,customfield_16251.cmdb.objectKey,customfield_16251.cmdb.attributes,customfield_16250.cmdb.label,customfield_16250.cmdb.objectKey,customfield_16250.cmdb.attributes,customfield_28089.cmdb.label,customfield_28089.cmdb.objectKey,customfield_28089.cmdb.attributes,customfield_16369.cmdb.label,customfield_16369.cmdb.objectKey,customfield_16369.cmdb.attributes,customfield_28090.cmdb.label,customfield_28090.cmdb.objectKey,customfield_28090.cmdb.attributes,customfield_16368.cmdb.label,customfield_16368.cmdb.objectKey,customfield_16368.cmdb.attributes,customfield_16367.cmdb.label,customfield_16367.cmdb.objectKey,customfield_16367.cmdb.attributes,customfield_16366.cmdb.label,customfield_16366.cmdb.objectKey,customfield_16366.cmdb.attributes,customfield_10814.cmdb.label,customfield_10814.cmdb.objectKey,customfield_10814.cmdb.attributes,customfield_17563.cmdb.label,customfield_17563.cmdb.objectKey,customfield_17563.cmdb.attributes,customfield_17562.cmdb.label,customfield_17562.cmdb.objectKey,customfield_17562.cmdb.attributes,customfield_10110.cmdb.label,customfield_10110.cmdb.objectKey,customfield_10110.cmdb.attributes,customfield_10111.cmdb.label,customfield_10111.cmdb.objectKey,customfield_10111.cmdb.attributes,customfield_10109.cmdb.label,customfield_10109.cmdb.objectKey,customfield_10109.cmdb.attributes,customfield_27475.cmdb.label,customfield_27475.cmdb.objectKey,customfield_27475.cmdb.attributes,customfield_27474.cmdb.label,customfield_27474.cmdb.objectKey,customfield_27474.cmdb.attributes,customfield_27595.cmdb.label,customfield_27595.cmdb.objectKey,customfield_27595.cmdb.attributes,customfield_27477.cmdb.label,customfield_27477.cmdb.objectKey,customfield_27477.cmdb.attributes,customfield_27476.cmdb.label,customfield_27476.cmdb.objectKey,customfield_27476.cmdb.attributes,customfield_27479.cmdb.label,customfield_27479.cmdb.objectKey,customfield_27479.cmdb.attributes,customfield_27478.cmdb.label,customfield_27478.cmdb.objectKey,customfield_27478.cmdb.attributes,customfield_10463.cmdb.label,customfield_10463.cmdb.objectKey,customfield_10463.cmdb.attributes,customfield_10797.cmdb.label,customfield_10797.cmdb.objectKey,customfield_10797.cmdb.attributes,customfield_28478.cmdb.label,customfield_28478.cmdb.objectKey,customfield_28478.cmdb.attributes,customfield_10790.cmdb.label,customfield_10790.cmdb.objectKey,customfield_10790.cmdb.attributes,customfield_10794.cmdb.label,customfield_10794.cmdb.objectKey,customfield_10794.cmdb.attributes,customfield_10796.cmdb.label,customfield_10796.cmdb.objectKey,customfield_10796.cmdb.attributes,customfield_10788.cmdb.label,customfield_10788.cmdb.objectKey,customfield_10788.cmdb.attributes,customfield_27030.cmdb.label,customfield_27030.cmdb.objectKey,customfield_27030.cmdb.attributes,customfield_27032.cmdb.label,customfield_27032.cmdb.objectKey,customfield_27032.cmdb.attributes,customfield_20459.cmdb.label,customfield_20459.cmdb.objectKey,customfield_20459.cmdb.attributes,customfield_27290.cmdb.label,customfield_27290.cmdb.objectKey,customfield_27290.cmdb.attributes,customfield_28021.cmdb.label,customfield_28021.cmdb.objectKey,customfield_28021.cmdb.attributes,customfield_27295.cmdb.label,customfield_27295.cmdb.objectKey,customfield_27295.cmdb.attributes,customfield_27297.cmdb.label,customfield_27297.cmdb.objectKey,customfield_27297.cmdb.attributes,customfield_27296.cmdb.label,customfield_27296.cmdb.objectKey,customfield_27296.cmdb.attributes,customfield_27298.cmdb.label,customfield_27298.cmdb.objectKey,customfield_27298.cmdb.attributes,customfield_20446.cmdb.label,customfield_20446.cmdb.objectKey,customfield_20446.cmdb.attributes,customfield_16190.cmdb.label,customfield_16190.cmdb.objectKey,customfield_16190.cmdb.attributes,customfield_16183.cmdb.label,customfield_16183.cmdb.objectKey,customfield_16183.cmdb.attributes,customfield_16182.cmdb.label,customfield_16182.cmdb.objectKey,customfield_16182.cmdb.attributes,customfield_16181.cmdb.label,customfield_16181.cmdb.objectKey,customfield_16181.cmdb.attributes,customfield_12253.cmdb.label,customfield_12253.cmdb.objectKey,customfield_12253.cmdb.attributes,customfield_12252.cmdb.label,customfield_12252.cmdb.objectKey,customfield_12252.cmdb.attributes,customfield_12012.cmdb.label,customfield_12012.cmdb.objectKey,customfield_12012.cmdb.attributes,customfield_12254.cmdb.label,customfield_12254.cmdb.objectKey,customfield_12254.cmdb.attributes,customfield_16847.cmdb.label,customfield_16847.cmdb.objectKey,customfield_16847.cmdb.attributes,customfield_12121.cmdb.label,customfield_12121.cmdb.objectKey,customfield_12121.cmdb.attributes,customfield_10069.cmdb.label,customfield_10069.cmdb.objectKey,customfield_10069.cmdb.attributes,customfield_12239.cmdb.label,customfield_12239.cmdb.objectKey,customfield_12239.cmdb.attributes,customfield_11134.cmdb.label,customfield_11134.cmdb.objectKey,customfield_11134.cmdb.attributes,customfield_11135.cmdb.label,customfield_11135.cmdb.objectKey,customfield_11135.cmdb.attributes,customfield_27300.cmdb.label,customfield_27300.cmdb.objectKey,customfield_27300.cmdb.attributes,customfield_27308.cmdb.label,customfield_27308.cmdb.objectKey,customfield_27308.cmdb.attributes,customfield_27310.cmdb.label,customfield_27310.cmdb.objectKey,customfield_27310.cmdb.attributes,customfield_27312.cmdb.label,customfield_27312.cmdb.objectKey,customfield_27312.cmdb.attributes,customfield_27311.cmdb.label,customfield_27311.cmdb.objectKey,customfield_27311.cmdb.attributes,customfield_27314.cmdb.label,customfield_27314.cmdb.objectKey,customfield_27314.cmdb.attributes,customfield_27315.cmdb.label,customfield_27315.cmdb.objectKey,customfield_27315.cmdb.attributes,customfield_11476.cmdb.label,customfield_11476.cmdb.objectKey,customfield_11476.cmdb.attributes,customfield_11477.cmdb.label,customfield_11477.cmdb.objectKey,customfield_11477.cmdb.attributes,customfield_27681.cmdb.label,customfield_27681.cmdb.objectKey,customfield_27681.cmdb.attributes,customfield_27325.cmdb.label,customfield_27325.cmdb.objectKey,customfield_27325.cmdb.attributes,customfield_27206.cmdb.label,customfield_27206.cmdb.objectKey,customfield_27206.cmdb.attributes,customfield_27208.cmdb.label,customfield_27208.cmdb.objectKey,customfield_27208.cmdb.attributes,customfield_27209.cmdb.label,customfield_27209.cmdb.objectKey,customfield_27209.cmdb.attributes,customfield_10010.requestTypePractice,customfield_10117.cmdb.label,customfield_10117.cmdb.objectKey,customfield_10117.cmdb.attributes,customfield_10118.cmdb.label,customfield_10118.cmdb.objectKey,customfield_10118.cmdb.attributes,customfield_10119.cmdb.label,customfield_10119.cmdb.objectKey,customfield_10119.cmdb.attributes,customfield_17663.cmdb.label,customfield_17663.cmdb.objectKey,customfield_17663.cmdb.attributes,customfield_16664.properties,customfield_15441.cmdb.label,customfield_15441.cmdb.objectKey,customfield_15441.cmdb.attributes,customfield_15445.cmdb.label,customfield_15445.cmdb.objectKey,customfield_15445.cmdb.attributes,customfield_15442.cmdb.label,customfield_15442.cmdb.objectKey,customfield_15442.cmdb.attributes,customfield_15443.cmdb.label,customfield_15443.cmdb.objectKey,customfield_15443.cmdb.attributes,customfield_12261.cmdb.label,customfield_12261.cmdb.objectKey,customfield_12261.cmdb.attributes,customfield_12267.cmdb.label,customfield_12267.cmdb.objectKey,customfield_12267.cmdb.attributes,customfield_27980.cmdb.label,customfield_27980.cmdb.objectKey,customfield_27980.cmdb.attributes,customfield_26656.cmdb.label,customfield_26656.cmdb.objectKey,customfield_26656.cmdb.attributes,customfield_26655.cmdb.label,customfield_26655.cmdb.objectKey,customfield_26655.cmdb.attributes,customfield_26657.cmdb.label,customfield_26657.cmdb.objectKey,customfield_26657.cmdb.attributes",
+      "id": "5820058",
+      "self": "https://mercedes-benz.atlassian.net/rest/api/3/issue/5820058",
+      "key": "TONYTEST-27940",
+      "fields": {
+        "customfield_16172": [],
+        "customfield_19208": null,
+        "customfield_16179": [],
+        "customfield_10991": null,
+        "statusCategory": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/2",
+          "id": 2,
+          "key": "new",
+          "colorName": "blue-gray",
+          "name": "To Do"
+        },
+        "resolution": null,
+        "customfield_11711": null,
+        "customfield_11953": [],
+        "customfield_10865": null,
+        "customfield_29250": null,
+        "customfield_12922": [],
+        "customfield_28288": null,
+        "customfield_28289": null,
+        "customfield_29254": null,
+        "customfield_29018": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931357",
+          "value": "-",
+          "id": "931357"
+        },
+        "customfield_16290": [],
+        "lastViewed": "2025-12-14T04:53:29.278+0100",
+        "customfield_16281": [],
+        "customfield_17370": null,
+        "customfield_16288": [],
+        "customfield_16166": null,
+        "customfield_16164": null,
+        "customfield_28291": null,
+        "customfield_28292": null,
+        "customfield_11950": null,
+        "customfield_27081": [],
+        "customfield_28290": null,
+        "customfield_28295": null,
+        "customfield_10852": null,
+        "customfield_10973": null,
+        "customfield_29021": null,
+        "customfield_27083": null,
+        "customfield_10853": null,
+        "customfield_11944": null,
+        "customfield_28293": null,
+        "customfield_29262": null,
+        "customfield_10855": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/17052",
+          "value": "ADG",
+          "id": "17052"
+        },
+        "customfield_28294": null,
+        "customfield_11946": null,
+        "customfield_10856": null,
+        "customfield_28299": null,
+        "aggregatetimeoriginalestimate": null,
+        "customfield_11945": null,
+        "customfield_11948": null,
+        "customfield_28297": null,
+        "customfield_28056": null,
+        "customfield_11947": null,
+        "customfield_28298": null,
+        "issuelinks": [],
+        "assignee": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "emailAddress": "th.huang@carux.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+          },
+          "displayName": "TH Huang",
+          "active": true,
+          "timeZone": "Asia/Taipei",
+          "accountType": "atlassian"
+        },
+        "customfield_11709": null,
+        "customfield_16280": [],
+        "customfield_20413": null,
+        "customfield_10850": null,
+        "customfield_10972": null,
+        "customfield_10841": null,
+        "customfield_29036": null,
+        "customfield_29157": null,
+        "customfield_10845": [
+          {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/18392",
+            "value": "None",
+            "id": "18392"
+          }
+        ],
+        "customfield_10846": null,
+        "customfield_29276": null,
+        "customfield_29035": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931126",
+          "value": "Mercedes me connect (RD/UC)",
+          "id": "931126"
+        },
+        "customfield_29038": null,
+        "customfield_20404": [],
+        "customfield_20405": [],
+        "customfield_20403": [],
+        "customfield_20401": [],
+        "subtasks": [],
+        "customfield_16264": null,
+        "customfield_16269": [],
+        "customfield_16268": [],
+        "customfield_29040": null,
+        "customfield_11921": null,
+        "customfield_10955": null,
+        "customfield_10959": null,
+        "votes": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/issue/TONYTEST-27940/votes",
+          "votes": 0,
+          "hasVoted": false
+        },
+        "worklog": {
+          "startAt": 0,
+          "maxResults": 20,
+          "total": 0,
+          "worklogs": []
+        },
+        "customfield_16251": [],
+        "issuetype": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/issuetype/10769",
+          "id": "10769",
+          "description": "This is the Xray Test Issue Type. Used to define test cases of different types that can be executed multiple times using Test Execution issues.",
+          "iconUrl": "https://mercedes-benz.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/11045?size=medium",
+          "name": "Test",
+          "subtask": false,
+          "avatarId": 11045,
+          "hierarchyLevel": 0
+        },
+        "customfield_16250": [],
+        "customfield_29051": null,
+        "customfield_10942": null,
+        "customfield_29053": null,
+        "customfield_29058": null,
+        "customfield_29059": null,
+        "customfield_10826": null,
+        "customfield_29057": null,
+        "customfield_28089": [],
+        "customfield_10829": null,
+        "customfield_11918": null,
+        "customfield_16482": [
+          {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725789",
+            "value": "E/E-Board",
+            "id": "725789"
+          }
+        ],
+        "customfield_16480": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726214",
+          "value": "No",
+          "id": "726214"
+        },
+        "customfield_16486": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725717",
+          "value": "-",
+          "id": "725717"
+        },
+        "customfield_16484": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726221",
+          "value": "Content not yet ready",
+          "id": "726221"
+        },
+        "customfield_16369": [],
+        "customfield_28090": [],
+        "customfield_16368": [],
+        "customfield_16367": [],
+        "customfield_16366": [],
+        "customfield_29062": null,
+        "customfield_29060": null,
+        "customfield_28097": null,
+        "customfield_28098": null,
+        "customfield_28095": null,
+        "customfield_28096": null,
+        "customfield_10813": null,
+        "customfield_10814": [],
+        "customfield_28099": null,
+        "customfield_10936": null,
+        "customfield_10937": null,
+        "customfield_10938": null,
+        "customfield_10818": null,
+        "customfield_16471": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725953",
+          "value": "Empty",
+          "id": "725953"
+        },
+        "customfield_16475": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726216",
+          "value": "To Clarify",
+          "id": "726216"
+        },
+        "customfield_17564": null,
+        "customfield_17563": [],
+        "customfield_16474": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/735707",
+          "value": "No",
+          "id": "735707"
+        },
+        "customfield_17562": [],
+        "customfield_16473": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726659",
+          "value": "-",
+          "id": "726659"
+        },
+        "customfield_16472": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725784",
+          "value": "-",
+          "id": "725784"
+        },
+        "customfield_16479": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725548",
+          "value": "No",
+          "id": "725548"
+        },
+        "customfield_16478": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725718",
+          "value": "-",
+          "id": "725718"
+        },
+        "customfield_16477": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726630",
+          "value": "No",
+          "id": "726630"
+        },
+        "customfield_16476": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726218",
+          "value": "-",
+          "id": "726218"
+        },
+        "timetracking": {},
+        "customfield_29195": null,
+        "customfield_10922": null,
+        "customfield_10924": null,
+        "customfield_26925": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931390",
+          "value": "n/a",
+          "id": "931390"
+        },
+        "customfield_16464": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725767",
+          "value": "No",
+          "id": "725767"
+        },
+        "customfield_16463": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725483",
+          "value": "No",
+          "id": "725483"
+        },
+        "customfield_16467": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725951",
+          "value": "Yes",
+          "id": "725951"
+        },
+        "customfield_16466": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725568",
+          "value": "No",
+          "id": "725568"
+        },
+        "customfield_16465": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725841",
+          "value": "RED",
+          "id": "725841"
+        },
+        "environment": null,
+        "duedate": null,
+        "customfield_10914": null,
+        "customfield_10351": null,
+        "customfield_10110": [],
+        "customfield_10111": [],
+        "customfield_12775": null,
+        "customfield_10346": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725484",
+          "value": "No",
+          "id": "725484"
+        },
+        "customfield_10105": null,
+        "customfield_12406": null,
+        "customfield_10106": null,
+        "customfield_10107": null,
+        "customfield_10108": null,
+        "customfield_27594": null,
+        "customfield_28443": null,
+        "customfield_10109": [],
+        "customfield_27475": [],
+        "customfield_27474": [],
+        "customfield_27595": [],
+        "customfield_27477": [],
+        "customfield_27476": [],
+        "customfield_27479": [],
+        "customfield_28444": null,
+        "customfield_27478": [],
+        "customfield_28445": null,
+        "customfield_21235": null,
+        "customfield_10463": [],
+        "customfield_12763": null,
+        "customfield_27000": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931492",
+          "value": "Please select",
+          "id": "931492"
+        },
+        "timeestimate": null,
+        "customfield_27001": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931095",
+          "value": "Please select",
+          "id": "931095"
+        },
+        "customfield_27004": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931498",
+          "value": "-",
+          "id": "931498"
+        },
+        "customfield_27008": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931115",
+          "value": "-",
+          "id": "931115"
+        },
+        "customfield_27007": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931535",
+          "value": "no",
+          "id": "931535"
+        },
+        "status": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/status/10213",
+          "description": "",
+          "iconUrl": "https://mercedes-benz.atlassian.net/images/icons/statuses/generic.png",
+          "name": "NEW",
+          "id": "10213",
+          "statusCategory": {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/2",
+            "id": 2,
+            "key": "new",
+            "colorName": "blue-gray",
+            "name": "To Do"
+          }
+        },
+        "customfield_27009": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931478",
+          "value": "Please select",
+          "id": "931478"
+        },
+        "customfield_10451": null,
+        "customfield_12873": null,
+        "customfield_12874": null,
+        "customfield_12744": null,
+        "customfield_11657": null,
+        "customfield_28585": null,
+        "customfield_28101": null,
+        "aggregatetimeestimate": null,
+        "customfield_27010": "2025-12-13T19:05:00.000+0100",
+        "customfield_28102": null,
+        "customfield_12748": null,
+        "customfield_29796": null,
+        "customfield_27013": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931408",
+          "value": "Weiterentwicklung",
+          "id": "931408"
+        },
+        "customfield_28100": null,
+        "customfield_29794": null,
+        "customfield_29315": null,
+        "customfield_29799": null,
+        "customfield_27019": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725962",
+          "value": "OPEN",
+          "id": "725962"
+        },
+        "customfield_17082": null,
+        "customfield_27018": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725777",
+          "value": "New",
+          "id": "725777"
+        },
+        "customfield_29318": null,
+        "creator": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "emailAddress": "th.huang@carux.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+          },
+          "displayName": "TH Huang",
+          "active": true,
+          "timeZone": "Asia/Taipei",
+          "accountType": "atlassian"
+        },
+        "customfield_10443": null,
+        "customfield_10797": [],
+        "customfield_12736": null,
+        "customfield_11647": null,
+        "customfield_11525": null,
+        "customfield_12738": null,
+        "customfield_28597": null,
+        "customfield_29686": null,
+        "customfield_29323": null,
+        "customfield_28478": [],
+        "customfield_21569": null,
+        "customfield_29328": null,
+        "customfield_17191": null,
+        "timespent": null,
+        "customfield_10790": [],
+        "customfield_11641": null,
+        "aggregatetimespent": null,
+        "customfield_10794": [],
+        "customfield_12732": null,
+        "customfield_11642": null,
+        "customfield_10796": [],
+        "customfield_12723": null,
+        "customfield_10787": null,
+        "customfield_10788": [],
+        "customfield_12725": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/57611",
+          "value": "Unspecified",
+          "id": "57611"
+        },
+        "customfield_27030": [],
+        "customfield_27033": null,
+        "customfield_11517": null,
+        "customfield_12727": null,
+        "customfield_29212": null,
+        "customfield_29213": null,
+        "customfield_27032": [],
+        "customfield_29210": null,
+        "customfield_29216": null,
+        "customfield_29337": null,
+        "workratio": -1,
+        "customfield_16092": null,
+        "customfield_29218": null,
+        "customfield_16090": null,
+        "customfield_29219": null,
+        "customfield_16086": null,
+        "customfield_16085": null,
+        "customfield_20462": null,
+        "customfield_20460": null,
+        "customfield_16089": null,
+        "customfield_11751": null,
+        "customfield_12721": null,
+        "customfield_10897": null,
+        "customfield_11866": null,
+        "customfield_28377": null,
+        "customfield_12717": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/57502",
+          "value": "No",
+          "id": "57502"
+        },
+        "customfield_12719": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/57524",
+          "value": "Unspecified",
+          "id": "57524"
+        },
+        "customfield_20459": [],
+        "customfield_20454": null,
+        "customfield_18011": null,
+        "customfield_27290": [],
+        "customfield_28021": [],
+        "customfield_10887": null,
+        "customfield_27295": [],
+        "customfield_27297": [],
+        "customfield_11615": null,
+        "customfield_27296": [],
+        "customfield_29111": null,
+        "customfield_12707": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/57401",
+          "value": "Unspecified",
+          "id": "57401"
+        },
+        "customfield_27298": [],
+        "customfield_29237": null,
+        "customfield_29479": null,
+        "customfield_20446": [],
+        "customfield_16190": [],
+        "customfield_16183": [],
+        "customfield_16182": [],
+        "customfield_10881": null,
+        "customfield_10883": null,
+        "customfield_10874": null,
+        "customfield_29360": null,
+        "customfield_27184": null,
+        "customfield_11726": null,
+        "customfield_11848": null,
+        "customfield_20438": null,
+        "customfield_16181": [],
+        "customfield_28716": null,
+        "customfield_10071": null,
+        "customfield_11040": null,
+        "customfield_12253": [],
+        "customfield_12252": [],
+        "customfield_12255": null,
+        "customfield_12012": [],
+        "customfield_12254": [],
+        "customfield_12378": null,
+        "customfield_16736": null,
+        "customfield_12136": null,
+        "customfield_10078": null,
+        "customfield_16735": null,
+        "customfield_10079": null,
+        "customfield_16734": null,
+        "customfield_15518": null,
+        "customfield_16847": [],
+        "customfield_27751": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737736",
+          "value": "Unknown",
+          "id": "737736"
+        },
+        "customfield_28601": null,
+        "customfield_27875": null,
+        "customfield_27754": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737554",
+          "value": "-",
+          "id": "737554"
+        },
+        "customfield_27632": null,
+        "customfield_27753": null,
+        "customfield_27756": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737520",
+          "value": "OPEN",
+          "id": "737520"
+        },
+        "customfield_27634": null,
+        "customfield_27876": null,
+        "customfield_28602": null,
+        "customfield_27636": null,
+        "customfield_28603": null,
+        "customfield_27639": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/736062",
+          "value": "Yes",
+          "id": "736062"
+        },
+        "customfield_27759": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/738102",
+          "value": "RED",
+          "id": "738102"
+        },
+        "customfield_28606": null,
+        "customfield_10061": null,
+        "customfield_10062": null,
+        "customfield_12121": [],
+        "customfield_15630": null,
+        "customfield_10068": null,
+        "customfield_11398": null,
+        "customfield_10069": [],
+        "customfield_11158": null,
+        "labels": [],
+        "customfield_12239": [],
+        "customfield_27880": null,
+        "customfield_27761": null,
+        "customfield_27640": [
+          {
+            "name": "[XENTRY]_to-admins",
+            "groupId": "3f4604c2-0eda-4faf-ac02-88dffc3bf2d8",
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/group?groupId=3f4604c2-0eda-4faf-ac02-88dffc3bf2d8"
+          }
+        ],
+        "customfield_27760": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737546",
+          "value": "No",
+          "id": "737546"
+        },
+        "customfield_28733": null,
+        "customfield_27762": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737657",
+          "value": "Yes",
+          "id": "737657"
+        },
+        "customfield_27641": null,
+        "customfield_27764": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737702",
+          "value": "-",
+          "id": "737702"
+        },
+        "customfield_28610": null,
+        "customfield_27643": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/736075",
+          "value": "0 - just one or not important",
+          "id": "736075"
+        },
+        "customfield_27645": null,
+        "customfield_28616": null,
+        "customfield_28613": null,
+        "components": [],
+        "customfield_28618": null,
+        "customfield_10050": null,
+        "customfield_10051": null,
+        "customfield_10052": null,
+        "customfield_11384": null,
+        "customfield_11145": null,
+        "customfield_10056": null,
+        "customfield_10057": null,
+        "customfield_10058": [],
+        "customfield_10059": null,
+        "customfield_10049": null,
+        "customfield_27772": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737619",
+          "value": "A4",
+          "id": "737619"
+        },
+        "customfield_28622": null,
+        "customfield_27773": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737934",
+          "value": "No",
+          "id": "737934"
+        },
+        "customfield_27775": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737706",
+          "value": "No",
+          "id": "737706"
+        },
+        "customfield_28747": null,
+        "customfield_27777": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737644",
+          "value": "No",
+          "id": "737644"
+        },
+        "customfield_28629": null,
+        "customfield_10040": null,
+        "customfield_11491": null,
+        "customfield_10041": null,
+        "customfield_11494": null,
+        "customfield_10042": null,
+        "reporter": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+          "emailAddress": "th.huang@carux.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+          },
+          "displayName": "TH Huang",
+          "active": true,
+          "timeZone": "Asia/Taipei",
+          "accountType": "atlassian"
+        },
+        "customfield_11375": null,
+        "customfield_10043": null,
+        "customfield_11374": null,
+        "customfield_11134": [],
+        "customfield_10045": null,
+        "customfield_10046": null,
+        "customfield_11135": [],
+        "customfield_10047": null,
+        "customfield_11016": null,
+        "customfield_10048": null,
+        "customfield_10038": null,
+        "customfield_27781": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737484",
+          "value": "Yes",
+          "id": "737484"
+        },
+        "customfield_28630": null,
+        "customfield_27783": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737646",
+          "value": "No",
+          "id": "737646"
+        },
+        "customfield_28633": null,
+        "customfield_27785": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737623",
+          "value": "New",
+          "id": "737623"
+        },
+        "customfield_28512": null,
+        "progress": {
+          "progress": 0,
+          "total": 0
+        },
+        "customfield_27300": [],
+        "customfield_27787": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737718",
+          "value": "-",
+          "id": "737718"
+        },
+        "customfield_27424": null,
+        "customfield_28752": null,
+        "customfield_28511": null,
+        "customfield_28753": null,
+        "customfield_27789": null,
+        "customfield_27425": null,
+        "customfield_28635": null,
+        "customfield_27309": null,
+        "customfield_27308": [],
+        "customfield_10150": null,
+        "customfield_10030": null,
+        "customfield_10272": null,
+        "project": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/project/18925",
+          "id": "18925",
+          "key": "TONYTEST",
+          "name": "Tony Test Management",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://mercedes-benz.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/14103",
+            "24x24": "https://mercedes-benz.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/14103?size=small",
+            "16x16": "https://mercedes-benz.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/14103?size=xsmall",
+            "32x32": "https://mercedes-benz.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/14103?size=medium"
+          }
+        },
+        "customfield_10031": null,
+        "customfield_10036": null,
+        "customfield_10037": null,
+        "customfield_10027": null,
+        "customfield_11479": null,
+        "customfield_10028": null,
+        "customfield_10029": null,
+        "customfield_27792": null,
+        "customfield_28761": null,
+        "customfield_27550": null,
+        "customfield_27552": null,
+        "resolutiondate": null,
+        "customfield_27794": null,
+        "customfield_27310": [],
+        "customfield_27312": [],
+        "customfield_28765": null,
+        "customfield_27796": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737700",
+          "value": "No",
+          "id": "737700"
+        },
+        "customfield_27311": [],
+        "customfield_28766": null,
+        "customfield_28763": null,
+        "customfield_27314": [],
+        "customfield_27555": null,
+        "customfield_27558": null,
+        "customfield_28648": null,
+        "customfield_27316": null,
+        "customfield_27557": null,
+        "customfield_27315": [],
+        "customfield_28767": null,
+        "customfield_27439": null,
+        "customfield_28768": null,
+        "watches": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/issue/TONYTEST-27940/watchers",
+          "watchCount": 1,
+          "isWatching": true
+        },
+        "customfield_10020": null,
+        "customfield_10021": null,
+        "customfield_11474": null,
+        "customfield_10022": null,
+        "customfield_11476": [],
+        "customfield_10023": null,
+        "customfield_11477": [],
+        "customfield_10026": [],
+        "customfield_10016": null,
+        "customfield_10017": null,
+        "customfield_11589": null,
+        "customfield_10019": "0|imxg52:",
+        "customfield_27681": [],
+        "customfield_27560": null,
+        "customfield_28410": null,
+        "customfield_27683": null,
+        "customfield_28650": null,
+        "customfield_27320": null,
+        "customfield_27565": null,
+        "customfield_28655": null,
+        "customfield_28656": null,
+        "customfield_27325": [],
+        "customfield_27324": null,
+        "customfield_27206": [],
+        "customfield_28659": null,
+        "customfield_27689": null,
+        "updated": "2025-12-14T05:39:19.468+0100",
+        "customfield_27205": null,
+        "customfield_27208": [],
+        "customfield_28657": null,
+        "customfield_27207": null,
+        "customfield_28658": null,
+        "customfield_27328": null,
+        "customfield_27209": [],
+        "timeoriginalestimate": null,
+        "customfield_10371": null,
+        "description": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Wanna try if the desc content updated, old version content and newer version records exist."
+                }
+              ]
+            }
+          ]
+        },
+        "customfield_10010": null,
+        "customfield_10374": null,
+        "customfield_10132": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "'*"
+                },
+                {
+                  "type": "text",
+                  "text": "Please enter the information as described below",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": "*"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "1. Please add a unique idenitifier (Customer ID, Ticket ID, Module ID)"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "2. Describe the subject in detail"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "3. Expected result"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "4. Steps to reproduce: Explain in bullet points how the subject can be reproduced / your step-by-step actions that led to the subject matter"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "5. Browser version"
+                }
+              ]
+            }
+          ]
+        },
+        "customfield_10375": null,
+        "customfield_10134": null,
+        "customfield_10014": null,
+        "customfield_10015": null,
+        "customfield_10005": null,
+        "customfield_12305": null,
+        "customfield_12304": null,
+        "customfield_11336": null,
+        "customfield_27691": null,
+        "customfield_12306": null,
+        "customfield_27330": null,
+        "customfield_28662": null,
+        "customfield_28663": null,
+        "customfield_28300": null,
+        "customfield_28661": null,
+        "customfield_27331": null,
+        "customfield_28545": null,
+        "customfield_27576": null,
+        "customfield_28666": null,
+        "customfield_27333": null,
+        "customfield_28301": null,
+        "customfield_28664": null,
+        "customfield_28665": null,
+        "customfield_27579": null,
+        "customfield_28547": null,
+        "customfield_28789": null,
+        "customfield_28669": null,
+        "summary": "黑色野獸 Bête Noire",
+        "customfield_10120": null,
+        "customfield_10000": "{}",
+        "customfield_10001": null,
+        "customfield_12301": null,
+        "customfield_10002": [],
+        "customfield_10003": null,
+        "customfield_12303": null,
+        "customfield_12302": null,
+        "customfield_10004": null,
+        "customfield_10357": null,
+        "customfield_28670": null,
+        "customfield_27581": null,
+        "customfield_10117": [],
+        "customfield_10118": [],
+        "customfield_10119": [],
+        "customfield_28673": null,
+        "customfield_28674": null,
+        "customfield_28672": null,
+        "customfield_28677": null,
+        "customfield_28798": null,
+        "customfield_27586": null,
+        "customfield_19172": null,
+        "customfield_28675": null,
+        "customfield_28796": null,
+        "comment": {
+          "comments": [
+            {
+              "self": "https://mercedes-benz.atlassian.net/rest/api/3/issue/5820058/comment/5301773",
+              "id": "5301773",
+              "author": {
+                "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+                "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+                "emailAddress": "th.huang@carux.com",
+                "avatarUrls": {
+                  "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                  "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                  "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                  "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+                },
+                "displayName": "TH Huang",
+                "active": true,
+                "timeZone": "Asia/Taipei",
+                "accountType": "atlassian"
+              },
+              "body": {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "During testing, we often encounter issues such as ensuring test coverage, environment configuration, and effective defect management, which can help improve product quality."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "updateAuthor": {
+                "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+                "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+                "emailAddress": "th.huang@carux.com",
+                "avatarUrls": {
+                  "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                  "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                  "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                  "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+                },
+                "displayName": "TH Huang",
+                "active": true,
+                "timeZone": "Asia/Taipei",
+                "accountType": "atlassian"
+              },
+              "created": "2025-12-13T19:40:32.726+0100",
+              "updated": "2025-12-13T19:40:32.726+0100",
+              "jsdPublic": true
+            }
+          ],
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/issue/5820058/comment",
+          "maxResults": 1,
+          "total": 1,
+          "startAt": 0
+        },
+        "customfield_28676": null,
+        "customfield_27903": null,
+        "statuscategorychangedate": "2025-12-13T19:05:01.972+0100",
+        "customfield_17663": [],
+        "fixVersions": [],
+        "customfield_10901": null,
+        "customfield_26940": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931188",
+          "value": "Demand",
+          "id": "931188"
+        },
+        "customfield_17414": null,
+        "priority": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/priority/10101",
+          "iconUrl": "https://mercedes-benz.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "10101"
+        },
+        "versions": [],
+        "customfield_26953": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931550",
+          "value": "Please Select",
+          "id": "931550"
+        },
+        "customfield_26952": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931441",
+          "value": "n/a",
+          "id": "931441"
+        },
+        "customfield_27804": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737924",
+          "value": "Empty",
+          "id": "737924"
+        },
+        "customfield_27803": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737659",
+          "value": "Content not yet ready",
+          "id": "737659"
+        },
+        "customfield_27806": null,
+        "customfield_26958": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931553",
+          "value": "Please select",
+          "id": "931553"
+        },
+        "customfield_27805": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737784",
+          "value": "-",
+          "id": "737784"
+        },
+        "customfield_27809": null,
+        "customfield_17402": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/342801",
+          "value": "Not Available",
+          "id": "342801"
+        },
+        "customfield_17521": null,
+        "customfield_12199": null,
+        "customfield_26962": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931517",
+          "value": "n/a",
+          "id": "931517"
+        },
+        "customfield_27810": null,
+        "customfield_26968": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931469",
+          "value": "Please Select",
+          "id": "931469"
+        },
+        "customfield_16662": null,
+        "customfield_16661": null,
+        "customfield_16665": null,
+        "customfield_16664": null,
+        "aggregateprogress": {
+          "progress": 0,
+          "total": 0
+        },
+        "customfield_16663": null,
+        "customfield_26971": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Initial situation:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Action:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Expected Result / Target Situation:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Actual Result / Target Situation:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Impact:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Workaround:"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Used logical or physical test data:"
+                }
+              ]
+            }
+          ]
+        },
+        "customfield_27701": null,
+        "customfield_27703": null,
+        "customfield_27702": null,
+        "customfield_27705": null,
+        "customfield_27947": null,
+        "customfield_27704": null,
+        "customfield_27707": null,
+        "customfield_27706": null,
+        "customfield_27709": null,
+        "customfield_27708": null,
+        "customfield_15441": [],
+        "customfield_12053": null,
+        "customfield_15445": [],
+        "customfield_15442": [],
+        "customfield_15443": [],
+        "customfield_28802": null,
+        "customfield_26985": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931508",
+          "value": "-",
+          "id": "931508"
+        },
+        "customfield_28803": null,
+        "customfield_28801": null,
+        "customfield_27713": null,
+        "customfield_26989": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931442",
+          "value": "-",
+          "id": "931442"
+        },
+        "customfield_27717": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737733",
+          "value": "No",
+          "id": "737733"
+        },
+        "customfield_27719": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737642",
+          "value": "No",
+          "id": "737642"
+        },
+        "created": "2025-12-13T19:05:01.581+0100",
+        "customfield_26990": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931473",
+          "value": "Please select",
+          "id": "931473"
+        },
+        "customfield_26995": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931266",
+          "value": "Please select",
+          "id": "931266"
+        },
+        "customfield_27721": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737715",
+          "value": "No",
+          "id": "737715"
+        },
+        "customfield_27720": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737709",
+          "value": "Unknown",
+          "id": "737709"
+        },
+        "customfield_26997": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931404",
+          "value": "Please select",
+          "id": "931404"
+        },
+        "customfield_27723": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/738099",
+          "value": "-",
+          "id": "738099"
+        },
+        "customfield_26999": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/931505",
+          "value": "Please select",
+          "id": "931505"
+        },
+        "customfield_27725": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737558",
+          "value": "To Clarify",
+          "id": "737558"
+        },
+        "customfield_27724": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737790",
+          "value": "No",
+          "id": "737790"
+        },
+        "customfield_27607": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The new GSEP Customer Service project is available!"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "text",
+                  "text": "Please follow the link to create your request: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/servicedesk/servicedesk/customer/portal/81",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/servicedesk/servicedesk/customer/portal/81"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "GSEP Customer Service documentation: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/confluence/x/ErL2EQ",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/confluence/x/ErL2EQ"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "text",
+                  "text": "GSEP Working Model user information: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/confluence/x/usn2EQ",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/confluence/x/usn2EQ"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Your GSEP team"
+                }
+              ]
+            }
+          ]
+        },
+        "customfield_12150": null,
+        "security": null,
+        "attachment": [
+          {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/2369246",
+            "id": "2369246",
+            "filename": "CurrentWallpaper_241221_02.jpg",
+            "author": {
+              "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "emailAddress": "th.huang@carux.com",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+              },
+              "displayName": "TH Huang",
+              "active": true,
+              "timeZone": "Asia/Taipei",
+              "accountType": "atlassian"
+            },
+            "created": "2025-12-14T05:39:19.080+0100",
+            "size": 2223816,
+            "mimeType": "image/jpeg",
+            "content": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/content/2369246",
+            "thumbnail": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/thumbnail/2369246"
+          }
+        ],
+        "customfield_27730": null,
+        "customfield_26763": 0.0,
+        "customfield_27610": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/725500",
+          "value": "RD/UC",
+          "id": "725500"
+        },
+        "customfield_27734": null,
+        "customfield_27614": null,
+        "customfield_27735": [
+          {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737547",
+            "value": "E/E-Board",
+            "id": "737547"
+          }
+        ],
+        "customfield_27738": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/738105",
+          "value": "RD/UC",
+          "id": "738105"
+        },
+        "customfield_27618": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/726623",
+          "value": "Unknown",
+          "id": "726623"
+        },
+        "customfield_27739": {
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/737731",
+          "value": "-",
+          "id": "737731"
+        },
+        "customfield_11291": null,
+        "customfield_11293": null,
+        "customfield_12261": [],
+        "customfield_11295": null,
+        "customfield_16741": null,
+        "customfield_16740": null,
+        "customfield_12267": [],
+        "customfield_12149": null,
+        "customfield_16739": null,
+        "customfield_16738": null,
+        "customfield_16737": null,
+        "customfield_24591": null,
+        "customfield_27980": [],
+        "customfield_27741": null,
+        "customfield_27983": null,
+        "customfield_27862": null,
+        "customfield_27982": null,
+        "customfield_27622": null,
+        "customfield_27864": null,
+        "customfield_27984": null,
+        "customfield_27742": {
+          "type": "doc",
+          "version": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The new GSEP Customer Service project is available!"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "text",
+                  "text": "Please follow the link to create your request: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/servicedesk/servicedesk/customer/portal/81",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/servicedesk/servicedesk/customer/portal/81"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "GSEP Customer Service documentation: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/confluence/x/ErL2EQ",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/confluence/x/ErL2EQ"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "text",
+                  "text": "GSEP Working Model user information: "
+                },
+                {
+                  "type": "text",
+                  "text": "https://gsep.daimler.com/confluence/x/usn2EQ",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://gsep.daimler.com/confluence/x/usn2EQ"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Your GSEP team"
+                }
+              ]
+            }
+          ]
+        },
+        "customfield_26656": [],
+        "customfield_27865": null,
+        "customfield_26655": [],
+        "customfield_26657": []
+      }
+    }
+  ]
+}
