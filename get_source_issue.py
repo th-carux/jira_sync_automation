@@ -280,7 +280,7 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
             "jql": jql_query,
             "maxResults": max_results,
             "startAt": start_at,
-            "fields": "summary,description,status,assignee,reporter,created,updated,priority,issuetype,comment,attachment"
+            "fields": "*all"  # 獲取所有字段，包括 custom field
         }
 
         response = requests.get(url, headers=headers, params=params)
@@ -491,6 +491,12 @@ def format_issue_for_console(issue):
             "name": status_obj.get("name", "")
         }
     
+    # 收集所有 custom field（以 customfield_ 開頭的字段）
+    custom_fields = {}
+    for field_name, field_value in fields.items():
+        if field_name.startswith("customfield_"):
+            custom_fields[field_name] = field_value
+    
     # 構建格式化後的 issue
     formatted_issue = {
         "id": issue.get("id", ""),
@@ -511,6 +517,10 @@ def format_issue_for_console(issue):
             "status": formatted_status
         }
     }
+    
+    # 將 custom fields 添加到 fields 中
+    if custom_fields:
+        formatted_issue["fields"]["customFields"] = custom_fields
     
     return formatted_issue
 

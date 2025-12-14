@@ -1,0 +1,107 @@
+[
+  {
+    "fieldType": "system",
+    "fieldId": "priority",
+    "syncDirection": "S2T",
+    "strategy": "MAPPED_SYNC",
+    "valueMapping": {
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low"
+    }
+  },
+  {
+    "fieldType": "system",
+    "fieldId": "summary",
+    "syncDirection": "S2T",
+    "strategy": "DIRECT_COPY",
+    "note": "Add prefix [MB-EAL] in the summary to indicate bug is coming from customer"
+  },
+  {
+    "fieldType": "system",
+    "fieldId": "status",
+    "syncDirection": "BIDIRECTIONAL",
+    "strategy": "MAPPED_SYNC",
+    "valueMapping": {
+      "UNASSIGNED": "UNASSIGNED",
+      "ASSIGNED": "IN ANALYSIS",
+      "ANALYZED": "ANALYZED",
+      "IMPLEMENTING": "ACCEPTED",
+      "FIXED": "INTEGRATED",
+      "VERIFIED": "VERIFIED",
+      "CLOSED": "CLOSED",
+      "REJECTED": "REJECTED"
+    },
+    "reverseMapping": {
+      "PLANNED": "IMPLEMENTING",
+      "BLOCKED": "IMPLEMENTING",
+      "IMPLEMENTED": "IMPLEMENTING",
+      "FAILURE ACCEPTED": "CLOSED",
+      "CANCELLED": "REJECTED"
+    }
+  },
+  {
+    "fieldType": "system",
+    "fieldId": "attachment",
+    "syncDirection": "BIDIRECTIONAL",
+    "strategy": "DIRECT_COPY",
+    "note": "attachment filed need to be synced with perticular method"
+  },
+  {
+    "fieldType": "custom",
+    "fieldDescription": "Description to Description_Bug",
+    "sourceFieldId": "description",
+    "targetFieldId": "customfield_10262",
+    "syncDirection": "S2T",
+    "strategy": "DIRECT_COPY"
+  },
+  {
+    "fieldType": "custom",
+    "fieldDescription": "Severity",
+    "sourceFieldId": "customfield_10037",
+    "targetFieldId": "customfield_10229",
+    "syncDirection": "S2T",
+    "strategy": "MAPPED_SYNC",
+    "valueMapping": {
+      "Not Applicable": "Low",
+      "VoCA 4 / IBN Low": "Low",
+      "VoCA 3 / IBN Medium": "Medium",
+      "VoCA 2 / IBN High": "High",
+      "VoCA 1 / IBN Ultra High": "High"
+    }
+  },
+  {
+    "fieldType": "custom",
+    "fieldDescription": "Root Cause to Root Cause Analysis",
+    "sourceFieldId": "customfield_10045",
+    "targetFieldId": "customfield_10294",
+    "syncDirection": "BIDIRECTIONAL",
+    "strategy": "DIRECT_COPY"
+  },
+  {
+    "fieldType": "custom",
+    "fieldDescription": "Origin (Static Value on Create)",
+    "sourceFieldId": null,
+    "targetFieldId": "customfield_10223",
+    "sync_direction": "S2T",
+    "strategy": "STATIC_VALUE",
+    "trigger_on": ["CREATE"],
+    "static_value": {
+       "value": "Customer"
+    },
+    "note": "僅在建立 Target Issue 時填入"
+  },
+  {
+    "fieldType": "custom",
+    "fieldDescription": "Detection Phase (Static Value on Create)",
+    "sourceFieldId": null,
+    "targetFieldId": "customfield_10216",
+    "sync_direction": "S2T",
+    "strategy": "STATIC_VALUE",
+    "trigger_on": ["CREATE"],
+    "static_value": {
+       "value": "Customer Test"
+    },
+    "note": "僅在建立 Target Issue 時填入"
+  }
+]
