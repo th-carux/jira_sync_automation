@@ -13,11 +13,27 @@ try:
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         config = json.load(f)
         source_config = config.get("source", {})
+        sync_issue_types = config.get("syncIssueType", [])
 except Exception as e:
     raise ValueError(f"錯誤：無法讀取 {CONFIG_FILE}: {e}")
 
 if not source_config:
     raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 source 配置")
+
+# 驗證 syncIssueType 格式：必須是字符串數組
+if sync_issue_types is not None:
+    if not isinstance(sync_issue_types, list):
+        raise ValueError(f"錯誤：{CONFIG_FILE} 的 syncIssueType 格式錯誤，必須是一個字符串數組（array），但得到 {type(sync_issue_types).__name__}")
+    
+    # 檢查數組中的每個元素是否都是字符串
+    for i, item in enumerate(sync_issue_types):
+        if not isinstance(item, str):
+            raise ValueError(f"錯誤：{CONFIG_FILE} 的 syncIssueType 格式錯誤，數組中的第 {i+1} 個元素必須是字符串，但得到 {type(item).__name__}")
+
+if sync_issue_types:
+    print(f"已讀取 syncIssueType 配置: {sync_issue_types}")
+else:
+    print("未找到 syncIssueType 配置，將取得所有 issue type 的 issue")
 
 # 先讀取 authType 決定需要哪些配置
 auth_type = source_config.get("authType", "Basic")
@@ -122,51 +138,37 @@ def test_authentication(base_url, auth_type, api_token, email=None):
         print(f"[錯誤] 認證測試發生錯誤: {str(e)}")
         return False
 
-def get_all_projects(base_url, auth_type, api_token, email=None):
-    """取得所有專案清單"""
-    url = f"{base_url}/project"
-    headers = get_auth_headers(auth_type, api_token, email)
-
-    print("正在取得所有專案清單...")
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        projects = response.json()
-        print(f"\n找到 {len(projects)} 個專案：")
-        print("=" * 80)
-        print(f"{'專案 Key':<15} {'專案名稱':<40} {'專案 ID':<15} {'專案類型':<15}")
-        print("-" * 80)
-
-        for project in projects:
-            project_key = project.get('key', 'N/A')
-            project_name = project.get('name', 'N/A')
-            project_id = project.get('id', 'N/A')
-            project_type = project.get('projectTypeKey', 'N/A')
-            print(f"{project_key:<15} {project_name:<40} {project_id:<15} {project_type:<15}")
-
-        print("=" * 80)
-        return projects
-    else:
-        print(f"取得專案清單失敗 (Status {response.status_code}): {response.text}")
-        return []
-
-def get_project_info(base_url, project_key, auth_type, api_token, email=None):
-    """取得專案資訊"""
+def check_project_exists(base_url, project_key, auth_type, api_token, email=None):
+    """檢查指定專案是否存在"""
     url = f"{base_url}/project/{project_key}"
     headers = get_auth_headers(auth_type, api_token, email)
 
-    print(f"正在取得專案 {project_key} 的資訊...")
-    response = requests.get(url, headers=headers)
+    print(f"正在檢查專案 {project_key} 是否存在...")
+    try:
+        response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        project_data = response.json()
-        print(f"專案名稱: {project_data.get('name')}")
-        print(f"專案 Key: {project_data.get('key')}")
-        print(f"專案 ID: {project_data.get('id')}")
-        return project_data
-    else:
-        print(f"取得專案資訊失敗 (Status {response.status_code}): {response.text}")
-        return None
+        if response.status_code == 200:
+            project_data = response.json()
+            print(f"[成功] 專案存在")
+            print(f"   專案名稱: {project_data.get('name')}")
+            print(f"   專案 Key: {project_data.get('key')}")
+            print(f"   專案 ID: {project_data.get('id')}")
+            return True
+        elif response.status_code == 404:
+            print(f"[失敗] 專案不存在 (404 Not Found)")
+            print(f"   錯誤訊息: 找不到專案 Key '{project_key}'")
+            return False
+        elif response.status_code == 403:
+            print(f"[失敗] 無權限存取專案 (403 Forbidden)")
+            print(f"   錯誤訊息: {response.text}")
+            return False
+        else:
+            print(f"[警告] 檢查專案時返回狀態碼: {response.status_code}")
+            print(f"   回應內容: {response.text}")
+            return False
+    except Exception as e:
+        print(f"[錯誤] 檢查專案時發生錯誤: {str(e)}")
+        return False
 
 def get_issue_details(base_url, issue_key, auth_type, api_token, email=None):
     """取得單個 Issue 的詳細資訊（包含 description、comments 和 attachments）"""
@@ -187,6 +189,72 @@ def get_issue_details(base_url, issue_key, auth_type, api_token, email=None):
     except Exception as e:
         print(f"  警告: 取得 {issue_key} 詳細資訊時發生錯誤: {str(e)}")
         return None
+
+def download_attachment(base_url, attachment, issue_key, auth_type, api_token, email=None):
+    """下載單個附件"""
+    attachment_id = attachment.get('id')
+    filename = attachment.get('filename', 'unknown')
+    content_url = attachment.get('content')
+    
+    if not content_url:
+        print(f"    警告: 附件 {filename} 沒有 content URL，跳過下載")
+        return False
+    
+    # 創建以 issue_key 命名的資料夾
+    folder_name = issue_key
+    try:
+        # 如果資料夾不存在則創建，已存在則不報錯
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name, exist_ok=True)
+            print(f"    已創建資料夾: {folder_name}")
+    except Exception as e:
+        print(f"    警告: 無法創建資料夾 {folder_name}: {str(e)}")
+        return False
+    
+    # 在檔名前面加上 [issue_key] 前綴
+    prefixed_filename = f"[{issue_key}]{filename}"
+    file_path = os.path.join(folder_name, prefixed_filename)
+    
+    # 如果檔案已存在，跳過下載
+    if os.path.exists(file_path):
+        print(f"    檔案已存在，跳過: {prefixed_filename}")
+        return True
+    
+    try:
+        headers = get_auth_headers(auth_type, api_token, email)
+        response = requests.get(content_url, headers=headers, stream=True)
+        
+        if response.status_code == 200:
+            with open(file_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            file_size = os.path.getsize(file_path)
+            print(f"    已下載: {prefixed_filename} ({file_size} bytes)")
+            return True
+        else:
+            print(f"    警告: 無法下載 {filename} (Status {response.status_code})")
+            return False
+    except Exception as e:
+        print(f"    錯誤: 下載 {filename} 時發生錯誤: {str(e)}")
+        return False
+
+def download_issue_attachments(base_url, issue, auth_type, api_token, email=None):
+    """下載 Issue 的所有附件"""
+    issue_key = issue.get('key', '')
+    fields = issue.get('fields', {})
+    attachments = fields.get('attachment', [])
+    
+    if not attachments or len(attachments) == 0:
+        return 0
+    
+    print(f"    正在下載 {len(attachments)} 個附件...")
+    downloaded_count = 0
+    
+    for attachment in attachments:
+        if download_attachment(base_url, attachment, issue_key, auth_type, api_token, email):
+            downloaded_count += 1
+    
+    return downloaded_count
 
 def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_results=100):
     """
@@ -293,6 +361,27 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
 
     # 使用過濾後的 issues
     all_issues = filtered_issues
+
+    # 根據 syncIssueType 過濾 issue type
+    if sync_issue_types:
+        print(f"\n正在過濾符合 syncIssueType 條件的 Issue...")
+        print(f"過濾前: {len(all_issues)} 個 Issue")
+        print(f"允許的 Issue Type: {sync_issue_types}")
+
+        type_filtered_issues = []
+        for issue in all_issues:
+            fields = issue.get('fields', {})
+            issue_type = fields.get('issuetype', {})
+            issue_type_name = issue_type.get('name', '') if issue_type else ''
+
+            # 檢查 issue type name 是否在 syncIssueType 列表中
+            if issue_type_name in sync_issue_types:
+                type_filtered_issues.append(issue)
+
+        print(f"過濾後: {len(type_filtered_issues)} 個 Issue (issue type 符合 syncIssueType 配置)")
+
+        # 使用過濾後的 issues
+        all_issues = type_filtered_issues
     total = len(all_issues)
 
     # 為每個 issue 補充 description、comments 和 attachments 資訊
@@ -300,7 +389,7 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
         print(f"\n正在取得 {total} 個 Issue 的詳細資訊（description、comments 和 attachments）...")
         for i, issue in enumerate(all_issues, 1):
             issue_key = issue.get('key')
-            print(f"  處理中 ({i}/{total}): {issue_key}...", end='\r')
+            print(f"  處理中 ({i}/{total}): {issue_key}...")
 
             details = get_issue_details(base_url, issue_key, auth_type, api_token, email)
             if details and 'fields' in details:
@@ -318,24 +407,112 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
                 # 補充 attachments 資訊
                 if 'attachment' in details['fields']:
                     issue['fields']['attachment'] = details['fields']['attachment']
+                    
+                    # 下載附件
+                    if issue['fields']['attachment']:
+                        download_issue_attachments(base_url, issue, auth_type, api_token, email)
 
         print(f"  完成！已取得所有 Issue 的詳細資訊。{' ' * 50}")
 
     return all_issues, total
 
-def format_issue_info(issue):
-    """格式化 Issue 資訊以便顯示"""
+def format_issue_for_console(issue):
+    """格式化 Issue 資訊以便在控制台顯示（JSON 格式）"""
     fields = issue.get("fields", {})
-    return {
-        "key": issue.get("key"),
-        "summary": fields.get("summary", "無標題"),
-        "status": fields.get("status", {}).get("name", "未知"),
-        "assignee": fields.get("assignee", {}).get("displayName", "未指派") if fields.get("assignee") else "未指派",
-        "priority": fields.get("priority", {}).get("name", "無") if fields.get("priority") else "無",
-        "issue_type": fields.get("issuetype", {}).get("name", "未知"),
-        "created": fields.get("created", ""),
-        "updated": fields.get("updated", "")
+    
+    # 格式化 issue type
+    issue_type_obj = fields.get("issuetype", {})
+    formatted_issuetype = None
+    if issue_type_obj:
+        formatted_issuetype = {
+            "name": issue_type_obj.get("name", ""),
+            "description": issue_type_obj.get("description", "")
+        }
+    
+    # 格式化 comments
+    formatted_comments = []
+    comment_obj = fields.get("comment", {})
+    if comment_obj and isinstance(comment_obj, dict):
+        comments_list = comment_obj.get("comments", [])
+        for comment in comments_list:
+            formatted_comment = {
+                "id": comment.get("id", ""),
+                "author": {
+                    "accountId": comment.get("author", {}).get("accountId", ""),
+                    "emailAddress": comment.get("author", {}).get("emailAddress", ""),
+                    "displayName": comment.get("author", {}).get("displayName", "")
+                },
+                "body": comment.get("body", {}),
+                "updateAuthor": {
+                    "accountId": comment.get("updateAuthor", {}).get("accountId", ""),
+                    "emailAddress": comment.get("updateAuthor", {}).get("emailAddress", ""),
+                    "displayName": comment.get("updateAuthor", {}).get("displayName", "")
+                },
+                "created": comment.get("created", ""),
+                "updated": comment.get("updated", "")
+            }
+            formatted_comments.append(formatted_comment)
+    
+    # 格式化 reporter
+    formatted_reporter = None
+    reporter_obj = fields.get("reporter")
+    if reporter_obj:
+        formatted_reporter = {
+            "accountId": reporter_obj.get("accountId", ""),
+            "emailAddress": reporter_obj.get("emailAddress", ""),
+            "displayName": reporter_obj.get("displayName", "")
+        }
+    
+    # 格式化 assignee
+    formatted_assignee = None
+    assignee_obj = fields.get("assignee")
+    if assignee_obj:
+        formatted_assignee = {
+            "accountId": assignee_obj.get("accountId", ""),
+            "emailAddress": assignee_obj.get("emailAddress", ""),
+            "displayName": assignee_obj.get("displayName", "")
+        }
+    
+    # 格式化 priority
+    formatted_priority = None
+    priority_obj = fields.get("priority")
+    if priority_obj:
+        formatted_priority = {
+            "id": priority_obj.get("id", ""),
+            "name": priority_obj.get("name", "")
+        }
+    
+    # 格式化 status
+    formatted_status = None
+    status_obj = fields.get("status")
+    if status_obj:
+        formatted_status = {
+            "id": status_obj.get("id", ""),
+            "name": status_obj.get("name", "")
+        }
+    
+    # 構建格式化後的 issue
+    formatted_issue = {
+        "id": issue.get("id", ""),
+        "key": issue.get("key", ""),
+        "fields": {
+            "summary": fields.get("summary", ""),
+            "issuetype": formatted_issuetype,
+            "attachment": fields.get("attachment", []),
+            "created": fields.get("created", ""),
+            "description": fields.get("description", {}),
+            "comment": {
+                "comments": formatted_comments
+            },
+            "reporter": formatted_reporter,
+            "assignee": formatted_assignee,
+            "priority": formatted_priority,
+            "updated": fields.get("updated", ""),
+            "status": formatted_status
+        }
     }
+    
+    return formatted_issue
 
 def main():
     """主程式"""
@@ -360,16 +537,15 @@ def main():
         print("[警告] 認證失敗，無法繼續執行。請檢查配置是否正確。")
         return
 
-    # 1. 先列出所有專案清單
-    all_projects = get_all_projects(BASE_URL, auth_type, api_token, email)
+    # 1. 檢查指定專案是否存在
+    project_exists = check_project_exists(BASE_URL, project_key, auth_type, api_token, email)
     print()
 
-    # 2. 取得指定專案資訊（可選，用於驗證）
-    print(f"正在處理專案: {project_key}")
-    project_info = get_project_info(BASE_URL, project_key, auth_type, api_token, email)
-    print()
+    if not project_exists:
+        print("[警告] 專案不存在或無權限存取，無法繼續執行。請檢查 projectKey 配置是否正確。")
+        return
 
-    # 3. 取得指定專案的所有 Issue
+    # 2. 取得指定專案的所有 Issue
     print(f"正在取得專案 {project_key} 的所有 Issue...")
     issues, total = get_all_issues(BASE_URL, project_key, auth_type, api_token, email)
 
@@ -379,21 +555,21 @@ def main():
     print("=" * 60)
     print()
 
-    # 4. 顯示 Issue 清單
+    # 4. 顯示 Issue 清單（JSON 格式）
     if issues:
         print("Issue 清單：")
-        print("-" * 60)
+        print("=" * 60)
+        formatted_issues = []
         for issue in issues:
-            info = format_issue_info(issue)
-            print(f"Key: {info['key']}")
-            print(f"  標題: {info['summary']}")
-            print(f"  狀態: {info['status']}")
-            print(f"  負責人: {info['assignee']}")
-            print(f"  優先級: {info['priority']}")
-            print(f"  類型: {info['issue_type']}")
-            print(f"  建立時間: {info['created']}")
-            print(f"  更新時間: {info['updated']}")
-            print("-" * 60)
+            formatted_issue = format_issue_for_console(issue)
+            formatted_issues.append(formatted_issue)
+        
+        # 輸出為 JSON 格式
+        console_output = {
+            "issues": formatted_issues
+        }
+        print(json.dumps(console_output, indent=2, ensure_ascii=False))
+        print("=" * 60)
     else:
         print("沒有找到任何 Issue")
 
