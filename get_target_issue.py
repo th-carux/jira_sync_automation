@@ -5,6 +5,7 @@ import base64
 
 # 從 jira_config.json 讀取設定
 CONFIG_FILE = "jira_config.json"
+MAPPING_FILE = "jira_field_mapping.json"
 
 if not os.path.exists(CONFIG_FILE):
     raise FileNotFoundError(f"錯誤：找不到 {CONFIG_FILE}，請確認檔案存在")
@@ -16,6 +17,22 @@ try:
         sync_issue_types = config.get("syncIssueType", [])
 except Exception as e:
     raise ValueError(f"錯誤：無法讀取 {CONFIG_FILE}: {e}")
+
+# 讀取 field mapping 配置，提取 target custom field IDs
+target_custom_field_ids = set()
+if os.path.exists(MAPPING_FILE):
+    try:
+        with open(MAPPING_FILE, "r", encoding="utf-8") as f:
+            mappings = json.load(f)
+            for item in mappings:
+                target_field_id = item.get("targetFieldId")
+                if target_field_id and target_field_id.startswith("customfield_"):
+                    target_custom_field_ids.add(target_field_id)
+    except Exception as e:
+        print(f"警告：無法讀取 {MAPPING_FILE}: {e}")
+        print("將顯示所有 custom field")
+else:
+    print(f"警告：找不到 {MAPPING_FILE}，將顯示所有 custom field")
 
 if not target_config:
     raise ValueError(f"錯誤：{CONFIG_FILE} 中找不到 target 配置")
@@ -204,7 +221,6 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
 
     print(f"正在取得專案 {project_key} 的 Issue...")
     print(f"JQL 過濾條件: 建立時間小於1天，最多 {max_results} 筆")
-    print(f"代碼過濾條件: reporter 或 assignee 的 email 必須以 @carux.com 結尾")
 
     while True:
         # 使用 GET 方法，JQL 和參數作為查詢參數
@@ -273,28 +289,6 @@ def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_
             break
 
         start_at += max_results
-
-    # 在代碼中過濾符合 email 條件的 issues
-    print(f"\n正在過濾符合 email 條件的 Issue...")
-    print(f"過濾前: {len(all_issues)} 個 Issue")
-
-    filtered_issues = []
-    for issue in all_issues:
-        fields = issue.get('fields', {})
-        assignee = fields.get('assignee')
-        reporter = fields.get('reporter')
-
-        assignee_email = assignee.get('emailAddress', '') if assignee else ''
-        reporter_email = reporter.get('emailAddress', '') if reporter else ''
-
-        # 檢查 assignee 或 reporter 的 email 是否以 @carux.com 結尾
-        if assignee_email.endswith('@carux.com') or reporter_email.endswith('@carux.com'):
-            filtered_issues.append(issue)
-
-    print(f"過濾後: {len(filtered_issues)} 個 Issue (reporter 或 assignee email 以 @carux.com 結尾)")
-
-    # 使用過濾後的 issues
-    all_issues = filtered_issues
 
     # 根據 syncIssueType 過濾 issue type
     if sync_issue_types:
@@ -421,10 +415,10 @@ def format_issue_for_console(issue):
             "name": status_obj.get("name", "")
         }
     
-    # 收集所有 custom field（以 customfield_ 開頭的字段）
+    # 只收集在 field mapping 中配置的 custom field
     custom_fields = {}
     for field_name, field_value in fields.items():
-        if field_name.startswith("customfield_"):
+        if field_name.startswith("customfield_") and field_name in target_custom_field_ids:
             custom_fields[field_name] = field_value
     
     # 構建格式化後的 issue
