@@ -207,6 +207,237 @@ def get_issue_details(base_url, issue_key, auth_type, api_token, email=None):
         print(f"  警告: 取得 {issue_key} 詳細資訊時發生錯誤: {str(e)}")
         return None
 
+def get_single_issue_full_details(base_url, issue_key, auth_type, api_token, email=None):
+    """取得單個 Issue 的完整詳細資訊（包含所有字段）"""
+    url = f"{base_url}/issue/{issue_key}"
+    headers = get_auth_headers(auth_type, api_token, email)
+
+    params = {
+        "fields": "*all"  # 獲取所有字段
+    }
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            print(f"  [錯誤] Issue {issue_key} 不存在 (404 Not Found)")
+            return None
+        elif response.status_code == 403:
+            print(f"  [錯誤] 無權限存取 Issue {issue_key} (403 Forbidden)")
+            return None
+        else:
+            print(f"  [錯誤] 無法取得 {issue_key} 的詳細資訊 (Status {response.status_code})")
+            print(f"  回應內容: {response.text}")
+            return None
+    except Exception as e:
+        print(f"  [錯誤] 取得 {issue_key} 詳細資訊時發生錯誤: {str(e)}")
+        return None
+
+def get_issue_editmeta(base_url, issue_key, auth_type, api_token, email=None):
+    """取得 Issue 的可編輯字段元數據（包含字段類型、是否必填等信息）"""
+    url = f"{base_url}/issue/{issue_key}/editmeta"
+    headers = get_auth_headers(auth_type, api_token, email)
+
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            print(f"  [錯誤] Issue {issue_key} 不存在 (404 Not Found)")
+            return None
+        elif response.status_code == 403:
+            print(f"  [錯誤] 無權限存取 Issue {issue_key} (403 Forbidden)")
+            return None
+        else:
+            print(f"  [警告] 無法取得 {issue_key} 的 editmeta (Status {response.status_code})")
+            print(f"  回應內容: {response.text}")
+            return None
+    except Exception as e:
+        print(f"  [錯誤] 取得 {issue_key} editmeta 時發生錯誤: {str(e)}")
+        return None
+
+def format_field_metadata(editmeta_data):
+    """格式化字段元數據，提取字段類型、是否必填等信息"""
+    if not editmeta_data or 'fields' not in editmeta_data:
+        return {}
+    
+    fields_metadata = {}
+    fields = editmeta_data.get('fields', {})
+    
+    for field_id, field_info in fields.items():
+        field_metadata = {
+            'fieldId': field_id,
+            'name': field_info.get('name', ''),
+            'type': field_info.get('schema', {}).get('type', 'unknown'),
+            'system': field_info.get('schema', {}).get('system', ''),
+            'custom': field_info.get('schema', {}).get('custom', ''),
+            'customId': field_info.get('schema', {}).get('customId', None),
+            'required': field_info.get('required', False),
+            'hasDefaultValue': field_info.get('hasDefaultValue', False),
+            'allowedValues': field_info.get('allowedValues', None),
+            'operations': field_info.get('operations', [])
+        }
+        
+        # 如果是自定義字段，添加更多信息
+        if field_id.startswith('customfield_'):
+            field_metadata['isCustomField'] = True
+            # 嘗試獲取字段的具體類型（如 select, text, date 等）
+            field_type = field_info.get('schema', {}).get('type', '')
+            if field_type == 'option':
+                field_metadata['fieldType'] = 'Select List (Single Choice)'
+            elif field_type == 'array' and field_info.get('schema', {}).get('items') == 'option':
+                field_metadata['fieldType'] = 'Select List (Multiple Choice)'
+            elif field_type == 'string':
+                field_metadata['fieldType'] = 'Text Field'
+            elif field_type == 'date':
+                field_metadata['fieldType'] = 'Date'
+            elif field_type == 'datetime':
+                field_metadata['fieldType'] = 'Date Time'
+            elif field_type == 'number':
+                field_metadata['fieldType'] = 'Number'
+            else:
+                field_metadata['fieldType'] = field_type
+        else:
+            field_metadata['isCustomField'] = False
+            field_metadata['fieldType'] = 'System Field'
+        
+        fields_metadata[field_id] = field_metadata
+    
+    return fields_metadata
+
+def display_single_issue_info(base_url, issue_key, auth_type, api_token, email=None):
+    """顯示單個 Issue 的詳細資訊和可用的字段元數據"""
+    print("\n" + "=" * 80)
+    print(f"取得 Issue {issue_key} 的詳細資訊")
+    print("=" * 80)
+    
+    # 1. 取得 Issue 完整詳細資訊
+    print(f"\n[1] 正在取得 Issue {issue_key} 的完整詳細資訊...")
+    issue_data = get_single_issue_full_details(base_url, issue_key, auth_type, api_token, email)
+    
+    if not issue_data:
+        print(f"無法取得 Issue {issue_key} 的詳細資訊")
+        return
+    
+    # 顯示基本資訊
+    fields = issue_data.get('fields', {})
+    print(f"  ✓ Issue Key: {issue_data.get('key', 'N/A')}")
+    print(f"  ✓ Issue ID: {issue_data.get('id', 'N/A')}")
+    print(f"  ✓ Summary: {fields.get('summary', 'N/A')}")
+    print(f"  ✓ Issue Type: {fields.get('issuetype', {}).get('name', 'N/A')}")
+    print(f"  ✓ Status: {fields.get('status', {}).get('name', 'N/A')}")
+    print(f"  ✓ Priority: {fields.get('priority', {}).get('name', 'N/A')}")
+    print(f"  ✓ Created: {fields.get('created', 'N/A')}")
+    print(f"  ✓ Updated: {fields.get('updated', 'N/A')}")
+    
+    # 2. 取得 Issue 的 editmeta（可編輯字段元數據）
+    print(f"\n[2] 正在取得 Issue {issue_key} 的字段元數據...")
+    editmeta_data = get_issue_editmeta(base_url, issue_key, auth_type, api_token, email)
+    
+    if not editmeta_data:
+        print(f"無法取得 Issue {issue_key} 的字段元數據")
+        # 仍然顯示 issue 的完整數據
+        print("\n[Issue 完整數據]")
+        print(json.dumps(issue_data, indent=2, ensure_ascii=False))
+        return
+    
+    # 格式化字段元數據
+    fields_metadata = format_field_metadata(editmeta_data)
+    
+    # 3. 顯示字段元數據
+    print(f"\n[3] 字段元數據分析")
+    print("-" * 80)
+    
+    # 分離系統字段和自定義字段
+    system_fields = {}
+    custom_fields = {}
+    
+    for field_id, metadata in fields_metadata.items():
+        if metadata.get('isCustomField', False):
+            custom_fields[field_id] = metadata
+        else:
+            system_fields[field_id] = metadata
+    
+    print(f"\n系統字段 (共 {len(system_fields)} 個):")
+    print("-" * 80)
+    for field_id, metadata in sorted(system_fields.items()):
+        required_mark = " [必填]" if metadata.get('required', False) else ""
+        print(f"  • {field_id}")
+        print(f"    名稱: {metadata.get('name', 'N/A')}")
+        print(f"    類型: {metadata.get('fieldType', metadata.get('type', 'N/A'))}")
+        print(f"    必填: {'是' if metadata.get('required', False) else '否'}{required_mark}")
+        if metadata.get('operations'):
+            print(f"    可執行操作: {', '.join(metadata.get('operations', []))}")
+        print()
+    
+    print(f"\n自定義字段 (共 {len(custom_fields)} 個):")
+    print("-" * 80)
+    for field_id, metadata in sorted(custom_fields.items()):
+        required_mark = " [必填]" if metadata.get('required', False) else ""
+        print(f"  • {field_id}")
+        print(f"    名稱: {metadata.get('name', 'N/A')}")
+        print(f"    類型: {metadata.get('fieldType', metadata.get('type', 'N/A'))}")
+        print(f"    數據類型: {metadata.get('type', 'N/A')}")
+        print(f"    必填: {'是' if metadata.get('required', False) else '否'}{required_mark}")
+        if metadata.get('customId'):
+            print(f"    自定義字段 ID: {metadata.get('customId')}")
+        if metadata.get('allowedValues') is not None:
+            allowed_count = len(metadata.get('allowedValues', []))
+            print(f"    允許的值數量: {allowed_count}")
+            if allowed_count > 0 and allowed_count <= 10:
+                # 顯示前幾個允許的值
+                values = metadata.get('allowedValues', [])[:5]
+                value_names = []
+                for val in values:
+                    if isinstance(val, dict):
+                        value_names.append(val.get('value', val.get('name', str(val))))
+                    else:
+                        value_names.append(str(val))
+                print(f"    允許的值範例: {', '.join(value_names)}")
+        if metadata.get('operations'):
+            print(f"    可執行操作: {', '.join(metadata.get('operations', []))}")
+        print()
+    
+    # 4. 顯示 Issue 的完整數據（包含所有字段值）
+    print("\n[4] Issue 完整數據（包含所有字段值）")
+    print("-" * 80)
+    
+    # 分離系統字段值和自定義字段值
+    system_field_values = {}
+    custom_field_values = {}
+    
+    for field_name, field_value in fields.items():
+        if field_name.startswith('customfield_'):
+            custom_field_values[field_name] = field_value
+        else:
+            system_field_values[field_name] = field_value
+    
+    formatted_issue = {
+        'id': issue_data.get('id'),
+        'key': issue_data.get('key'),
+        'self': issue_data.get('self'),
+        'fields': {
+            'systemFields': system_field_values,
+            'customFields': custom_field_values
+        },
+        'fieldMetadata': {
+            'systemFields': system_fields,
+            'customFields': custom_fields
+        }
+    }
+    
+    print(json.dumps(formatted_issue, indent=2, ensure_ascii=False))
+    
+    # 5. 保存到文件
+    target_name = target_config.get("name", "target")
+    output_file = f"{target_name.lower()}_{issue_key}_details.json"
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(formatted_issue, f, indent=2, ensure_ascii=False)
+    
+    print(f"\n[5] 結果已儲存至 {output_file}")
+    print("=" * 80)
+
 def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_results=100):
     """
     取得指定專案的所有 Issue 清單
@@ -450,6 +681,8 @@ def format_issue_for_console(issue):
 
 def main():
     """主程式"""
+    import sys
+    
     print("=" * 60)
     print("Jira 專案與 Issue 管理工具 (Target)")
     print("=" * 60)
@@ -471,6 +704,13 @@ def main():
         print("[警告] 認證失敗，無法繼續執行。請檢查配置是否正確。")
         return
 
+    # 檢查是否提供了 issue key 作為命令行參數
+    if len(sys.argv) > 1:
+        issue_key = sys.argv[1]
+        # 如果提供了 issue key，只獲取該 issue 的詳細資訊
+        display_single_issue_info(BASE_URL, issue_key, auth_type, api_token, email)
+        return
+
     # 1. 檢查指定專案是否存在
     project_exists = check_project_exists(BASE_URL, project_key, auth_type, api_token, email)
     print()
@@ -479,6 +719,29 @@ def main():
         print("[警告] 專案不存在或無權限存取，無法繼續執行。請檢查 projectKey 配置是否正確。")
         return
 
+    # 詢問用戶要執行哪個操作
+    print("請選擇操作：")
+    print("  1. 取得專案的所有 Issue 清單")
+    print("  2. 取得單個 Issue 的詳細資訊和字段元數據")
+    print()
+    
+    try:
+        choice = input("請輸入選項 (1 或 2，直接按 Enter 預設為 1): ").strip()
+        if not choice:
+            choice = "1"
+    except (EOFError, KeyboardInterrupt):
+        print("\n操作已取消")
+        return
+    
+    if choice == "2":
+        # 取得單個 Issue 的詳細資訊
+        issue_key = input("請輸入 Issue Key (例如: DM-17): ").strip()
+        if not issue_key:
+            print("錯誤: 未輸入 Issue Key")
+            return
+        display_single_issue_info(BASE_URL, issue_key, auth_type, api_token, email)
+        return
+    
     # 2. 取得指定專案的所有 Issue
     print(f"正在取得專案 {project_key} 的所有 Issue...")
     issues, total = get_all_issues(BASE_URL, project_key, auth_type, api_token, email)

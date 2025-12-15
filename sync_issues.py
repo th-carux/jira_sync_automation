@@ -253,6 +253,44 @@ class FieldProcessor:
     def __init__(self, mapping_config):
         self.mapping_config = mapping_config
 
+    def format_field_value(self, field_value, config_item):
+        """根據字段類型格式化字段值"""
+        target_field_id = config_item.get('targetFieldId', '')
+        field_data_type = config_item.get('targetFieldDataType', config_item.get('dataType'))
+        
+        # 如果已經是字典格式，直接返回
+        if isinstance(field_value, dict):
+            return field_value
+        
+        # 根據字段類型格式化
+        if field_data_type:
+            # 選項列表字段（單選或多選）
+            if field_data_type in ['option', 'select', 'com.atlassian.jira.plugin.system.customfieldtypes:select']:
+                return {"value": field_value}
+            # 多選選項列表
+            elif field_data_type in ['array', 'multiselect', 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect']:
+                if isinstance(field_value, list):
+                    return [{"value": v} if isinstance(v, str) else v for v in field_value]
+                else:
+                    return [{"value": field_value}]
+            # 文本字段
+            elif field_data_type in ['string', 'text', 'textarea']:
+                return field_value
+            # 數字字段
+            elif field_data_type in ['number', 'float']:
+                return field_value
+            # 日期字段
+            elif field_data_type in ['date', 'datetime']:
+                return field_value
+        
+        # 如果沒有指定類型，根據字段 ID 推斷
+        if 'customfield' in str(target_field_id):
+            # 對於自定義字段，如果是字符串，假設是選項列表，使用 {"value": "..."} 格式
+            if isinstance(field_value, str):
+                return {"value": field_value}
+        
+        return field_value
+
     def resolve_value(self, input_val, config_item, direction="S2T"):
         """解析欄位值，根據策略進行轉換"""
         strategy = config_item.get('strategy', 'DIRECT_COPY')
@@ -425,6 +463,11 @@ class FieldProcessor:
                     target_field = item.get('targetFieldId')
                 
                 if source_field and target_field:
+                    # 跳過 attachment 字段，因為 Jira API 不允許通過字段更新 API 設置 attachment
+                    # attachment 應該通過專門的附件 API 處理
+                    if field_type == 'system' and source_field == 'attachment':
+                        continue
+                    
                     src_val = source_issue['fields'].get(source_field)
                     if src_val is not None:
                         val = self.resolve_value(src_val, item, "S2T")
@@ -449,6 +492,11 @@ class FieldProcessor:
                     target_field = item.get('targetFieldId')
                 
                 if source_field and target_field:
+                    # 跳過 attachment 字段，因為 Jira API 不允許通過字段更新 API 設置 attachment
+                    # attachment 應該通過專門的附件 API 處理
+                    if field_type == 'system' and target_field == 'attachment':
+                        continue
+                    
                     tgt_val = target_issue['fields'].get(target_field)
                     if tgt_val is not None:
                         val = self.resolve_value(tgt_val, item, "T2S")
@@ -775,10 +823,39 @@ def run_sync():
                 
                 # 更新 SYNC_METADATA 字段（customer_issue_id 和 last_sync_time）
                 if customer_issue_id_field:
-                    post_create_fields[customer_issue_id_field] = s_key
+                    # 找到對應的配置項以獲取字段類型
+                    customer_issue_id_config = None
+                    for item in mappings:
+                        if (item.get('strategy') == 'SYNC_METADATA' and 
+                            item.get('metadataType') == 'customer_issue_id' and
+                            item.get('targetFieldId') == customer_issue_id_field):
+                            customer_issue_id_config = item
+                            break
+                    
+                    # 格式化字段值
+                    if customer_issue_id_config:
+                        formatted_value = processor.format_field_value(s_key, customer_issue_id_config)
+                        post_create_fields[customer_issue_id_field] = formatted_value
+                    else:
+                        post_create_fields[customer_issue_id_field] = s_key
+                
                 if last_sync_time_field:
                     current_time = datetime.now().isoformat()
-                    post_create_fields[last_sync_time_field] = current_time
+                    # 找到對應的配置項以獲取字段類型
+                    last_sync_time_config = None
+                    for item in mappings:
+                        if (item.get('strategy') == 'SYNC_METADATA' and 
+                            item.get('metadataType') == 'last_sync_time' and
+                            item.get('targetFieldId') == last_sync_time_field):
+                            last_sync_time_config = item
+                            break
+                    
+                    # 格式化字段值
+                    if last_sync_time_config:
+                        formatted_value = processor.format_field_value(current_time, last_sync_time_config)
+                        post_create_fields[last_sync_time_field] = formatted_value
+                    else:
+                        post_create_fields[last_sync_time_field] = current_time
                 
                 # 更新 STATIC_VALUE 字段（在 CREATE 時觸發的）
                 for item in mappings:
@@ -788,15 +865,15 @@ def run_sync():
                             static_value = item.get('staticValue', item.get('static_value', {}))
                             target_field_id = item.get('targetFieldId')
                             if target_field_id:
-                                # 對於選項列表字段，需要保持 {"value": "..."} 格式
+                                # 提取實際值
                                 if isinstance(static_value, dict):
-                                    post_create_fields[target_field_id] = static_value
+                                    actual_value = static_value.get('value', static_value)
                                 else:
-                                    # 如果是字符串，對於自定義字段需要使用 {"value": "..."} 格式
-                                    if 'customfield' in str(target_field_id):
-                                        post_create_fields[target_field_id] = {"value": static_value}
-                                    else:
-                                        post_create_fields[target_field_id] = static_value
+                                    actual_value = static_value
+                                
+                                # 使用 format_field_value 格式化字段值
+                                formatted_value = processor.format_field_value(actual_value, item)
+                                post_create_fields[target_field_id] = formatted_value
                 
                 if post_create_fields:
                     print(f"  -> 更新元數據和靜態值字段...")
@@ -815,11 +892,26 @@ def run_sync():
                             if response.status_code == 204:
                                 successful_fields[field_id] = field_value
                             else:
-                                failed_fields[field_id] = response.text
+                                # 解析錯誤響應
+                                error_msg = response.text
+                                try:
+                                    error_json = response.json()
+                                    if 'errors' in error_json:
+                                        error_details = error_json['errors'].get(field_id, '未知錯誤')
+                                        error_msg = f"{error_details}"
+                                    elif 'errorMessages' in error_json:
+                                        error_msg = '; '.join(error_json['errorMessages'])
+                                except:
+                                    pass
+                                
+                                failed_fields[field_id] = error_msg
                                 print(f"    警告: 無法設置字段 {field_id}: {response.status_code}")
+                                print(f"    錯誤詳情: {error_msg}")
+                                print(f"    嘗試設置的值: {json.dumps(field_value, ensure_ascii=False)}")
                         except Exception as e:
                             failed_fields[field_id] = str(e)
                             print(f"    警告: 設置字段 {field_id} 時發生錯誤: {str(e)}")
+                            print(f"    嘗試設置的值: {json.dumps(field_value, ensure_ascii=False)}")
                     
                     # 如果有成功的字段，批量更新
                     if successful_fields:
@@ -828,7 +920,10 @@ def run_sync():
                     # 如果有失敗的字段，記錄警告
                     if failed_fields:
                         print(f"    警告: 以下字段無法設置: {list(failed_fields.keys())}")
-                        print(f"    這些字段可能不在當前 issue type 的編輯屏幕上")
+                        print(f"    這些字段可能不在當前 issue type 的編輯屏幕上，或者值格式不正確")
+                        # 顯示每個失敗字段的詳細錯誤
+                        for field_id, error_msg in failed_fields.items():
+                            print(f"      - {field_id}: {error_msg[:200]}")
                 
                 # 同步附件到新創建的 issue（只從 source 同步到 target）
                 source_attachments = s_issue.get('fields', {}).get('attachment', [])
