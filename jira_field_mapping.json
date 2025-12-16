@@ -50,14 +50,6 @@
   },
   {
     "type": "custom",
-    "description": "Description -> Description_Bug",
-    "sourceFieldId": "description",
-    "targetFieldId": "customfield_10262",
-    "syncDirection": "S2T",
-    "strategy": "DIRECT_COPY"
-  },
-  {
-    "type": "custom",
     "description": "Severity -> Severity",
     "sourceFieldId": "customfield_10037",
     "targetFieldId": "customfield_10229",
@@ -78,6 +70,22 @@
     "sourceFieldId": "customfield_10045",
     "targetFieldId": "customfield_10294",
     "syncDirection": "BIDIRECTIONAL",
+    "strategy": "DIRECT_COPY"
+  },
+  {
+    "type": "custom",
+    "description": "Solution <-> Analysis Comments",
+    "sourceFieldId": "customfield_10973",
+    "targetFieldId": "customfield_10291",
+    "syncDirection": "BIDIRECTIONAL",
+    "strategy": "DIRECT_COPY"
+  },
+  {
+    "type": "custom",
+    "description": "Description -> Description_Bug",
+    "sourceFieldId": "description",
+    "targetFieldId": "customfield_10262",
+    "syncDirection": "S2T",
     "strategy": "DIRECT_COPY"
   },
   {
