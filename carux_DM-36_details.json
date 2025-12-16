@@ -1,10 +1,10 @@
 {
-  "id": "51416",
-  "key": "DM-32",
-  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51416",
+  "id": "51495",
+  "key": "DM-36",
+  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495",
   "fields": {
     "systemFields": {
-      "statuscategorychangedate": "2025-12-16T11:54:36.309+0800",
+      "statuscategorychangedate": "2025-12-16T23:57:48.650+0800",
       "fixVersions": [],
       "statusCategory": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/2",
@@ -16,10 +16,10 @@
       "resolution": null,
       "lastViewed": null,
       "priority": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/priority/3",
-        "iconUrl": "https://carux.atlassian.net/images/icons/priorities/medium_new.svg",
-        "name": "Medium",
-        "id": "3"
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/priority/4",
+        "iconUrl": "https://carux.atlassian.net/images/icons/priorities/low_new.svg",
+        "name": "Low",
+        "id": "4"
       },
       "labels": [],
       "timeestimate": null,
@@ -83,7 +83,7 @@
         "total": 0
       },
       "votes": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-32/votes",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-36/votes",
         "votes": 0,
         "hasVoted": false
       },
@@ -122,21 +122,21 @@
       "resolutiondate": null,
       "workratio": -1,
       "watches": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-32/watchers",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-36/watchers",
         "watchCount": 1,
         "isWatching": true
       },
-      "created": "2025-12-16T11:54:36.065+0800",
-      "updated": "2025-12-16T11:54:58.693+0800",
+      "created": "2025-12-16T23:57:48.299+0800",
+      "updated": "2025-12-16T23:58:01.472+0800",
       "timeoriginalestimate": null,
       "description": null,
       "timetracking": {},
       "security": null,
       "attachment": [
         {
-          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29101",
-          "id": "29101",
-          "filename": "CurrentWallpaper_241221_02.jpg",
+          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29185",
+          "id": "29185",
+          "filename": "[TONYTEST] coin.jpeg",
           "author": {
             "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/user?accountId=712020%3Abaaba02f-01b5-44f2-9387-305c063a1f99",
             "accountId": "712020:baaba02f-01b5-44f2-9387-305c063a1f99",
@@ -152,19 +152,19 @@
             "timeZone": "Asia/Taipei",
             "accountType": "app"
           },
-          "created": "2025-12-16T11:54:58.258+0800",
-          "size": 2223816,
+          "created": "2025-12-16T23:58:01.056+0800",
+          "size": 1355241,
           "mimeType": "image/jpeg",
-          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29101",
-          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29101"
+          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29185",
+          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29185"
         }
       ],
-      "summary": "[MB-EAL] 黑色野獸 Bête Noire",
+      "summary": "[MB-EAL] Test Ticket for Sync connection",
       "environment": null,
       "duedate": null,
       "comment": {
         "comments": [],
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51416/comment",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495/comment",
         "maxResults": 0,
         "total": 0,
         "startAt": 0
@@ -267,7 +267,7 @@
       },
       "customfield_10229": null,
       "customfield_10220": null,
-      "customfield_10221": "TONYTEST-27940",
+      "customfield_10221": "TONYTEST-27979",
       "customfield_10101": "",
       "customfield_10102": 0.0,
       "customfield_10223": {
@@ -570,7 +570,19 @@
             "content": [
               {
                 "type": "text",
-                "text": "Wanna try if the desc content updated, old version content and newer version records exist."
+                "text": "[STARC@Jira] "
+              },
+              {
+                "type": "text",
+                "text": "Way to deliver issue info to remote Jira",
+                "marks": [
+                  {
+                    "type": "textColor",
+                    "attrs": {
+                      "color": "#ff5630"
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -656,7 +668,7 @@
       "customfield_10016": null,
       "customfield_10259": null,
       "customfield_10017": null,
-      "customfield_10019": "0|i03k19:",
+      "customfield_10019": "0|i03kct:",
       "customfield_10250": null,
       "customfield_10251": null,
       "customfield_10252": null,

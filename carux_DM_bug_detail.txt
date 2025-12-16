@@ -1,18 +1,18 @@
 ================================================================================
-取得 Issue DM-28 的詳細資訊
+取得 Issue DM-36 的詳細資訊
 ================================================================================
 
-[1] 正在取得 Issue DM-28 的完整詳細資訊...
-  ✓ Issue Key: DM-28
-  ✓ Issue ID: 51289
-  ✓ Summary: [MB-EAL] 黑色野獸 Bête Noire
+[1] 正在取得 Issue DM-36 的完整詳細資訊...
+  ✓ Issue Key: DM-36
+  ✓ Issue ID: 51495
+  ✓ Summary: [MB-EAL] Test Ticket for Sync connection
   ✓ Issue Type: Bug
   ✓ Status: Backlog
-  ✓ Priority: Medium
-  ✓ Created: 2025-12-16T00:27:41.174+0800
-  ✓ Updated: 2025-12-16T00:41:04.630+0800
+  ✓ Priority: Low
+  ✓ Created: 2025-12-16T23:57:48.299+0800
+  ✓ Updated: 2025-12-16T23:58:01.472+0800
 
-[2] 正在取得 Issue DM-28 的字段元數據...
+[2] 正在取得 Issue DM-36 的字段元數據...
 
 [3] 字段元數據分析
 --------------------------------------------------------------------------------
@@ -279,12 +279,12 @@
 [4] Issue 完整數據（包含所有字段值）
 --------------------------------------------------------------------------------
 {
-  "id": "51289",
-  "key": "DM-28",
-  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51289",
+  "id": "51495",
+  "key": "DM-36",
+  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495",
   "fields": {
     "systemFields": {
-      "statuscategorychangedate": "2025-12-16T00:27:41.352+0800",
+      "statuscategorychangedate": "2025-12-16T23:57:48.650+0800",
       "fixVersions": [],
       "statusCategory": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/2",
@@ -296,10 +296,10 @@
       "resolution": null,
       "lastViewed": null,
       "priority": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/priority/3",
-        "iconUrl": "https://carux.atlassian.net/images/icons/priorities/medium_new.svg",
-        "name": "Medium",
-        "id": "3"
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/priority/4",
+        "iconUrl": "https://carux.atlassian.net/images/icons/priorities/low_new.svg",
+        "name": "Low",
+        "id": "4"
       },
       "labels": [],
       "timeestimate": null,
@@ -363,7 +363,7 @@
         "total": 0
       },
       "votes": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-28/votes",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-36/votes",
         "votes": 0,
         "hasVoted": false
       },
@@ -402,21 +402,21 @@
       "resolutiondate": null,
       "workratio": -1,
       "watches": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-28/watchers",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-36/watchers",
         "watchCount": 1,
         "isWatching": true
       },
-      "created": "2025-12-16T00:27:41.174+0800",
-      "updated": "2025-12-16T00:41:04.630+0800",
+      "created": "2025-12-16T23:57:48.299+0800",
+      "updated": "2025-12-16T23:58:01.472+0800",
       "timeoriginalestimate": null,
       "description": null,
       "timetracking": {},
       "security": null,
       "attachment": [
         {
-          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29054",
-          "id": "29054",
-          "filename": "CurrentWallpaper_241221_02.jpg",
+          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29185",
+          "id": "29185",
+          "filename": "[TONYTEST] coin.jpeg",
           "author": {
             "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/user?accountId=712020%3Abaaba02f-01b5-44f2-9387-305c063a1f99",
             "accountId": "712020:baaba02f-01b5-44f2-9387-305c063a1f99",
@@ -432,19 +432,19 @@
             "timeZone": "Asia/Taipei",
             "accountType": "app"
           },
-          "created": "2025-12-16T00:27:58.805+0800",
-          "size": 2223816,
+          "created": "2025-12-16T23:58:01.056+0800",
+          "size": 1355241,
           "mimeType": "image/jpeg",
-          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29054",
-          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29054"
+          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29185",
+          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29185"
         }
       ],
-      "summary": "[MB-EAL] 黑色野獸 Bête Noire",
+      "summary": "[MB-EAL] Test Ticket for Sync connection",
       "environment": null,
       "duedate": null,
       "comment": {
         "comments": [],
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51289/comment",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495/comment",
         "maxResults": 0,
         "total": 0,
         "startAt": 0
@@ -547,7 +547,7 @@
       },
       "customfield_10229": null,
       "customfield_10220": null,
-      "customfield_10221": null,
+      "customfield_10221": "TONYTEST-27979",
       "customfield_10101": "",
       "customfield_10102": 0.0,
       "customfield_10223": {
@@ -592,13 +592,17 @@
           }
         ]
       },
-      "customfield_10216": null,
+      "customfield_10216": {
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/customFieldOption/10146",
+        "value": "Customer test",
+        "id": "10146"
+      },
       "customfield_10217": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/customFieldOption/10149",
         "value": "Regular approach",
         "id": "10149"
       },
-      "customfield_10218": "TONYTEST-27940",
+      "customfield_10218": "TBD",
       "customfield_10738": null,
       "customfield_10291": {
         "type": "doc",
@@ -781,10 +785,7 @@
       "customfield_10311": null,
       "customfield_10036": null,
       "customfield_10312": null,
-      "customfield_10037": {
-        "id": 1,
-        "value": "Auto bottom up"
-      },
+      "customfield_10037": null,
       "customfield_10027": null,
       "customfield_10302": null,
       "customfield_10544": null,
@@ -849,7 +850,19 @@
             "content": [
               {
                 "type": "text",
-                "text": "Wanna try if the desc content updated, old version content and newer version records exist."
+                "text": "[STARC@Jira] "
+              },
+              {
+                "type": "text",
+                "text": "Way to deliver issue info to remote Jira",
+                "marks": [
+                  {
+                    "type": "textColor",
+                    "attrs": {
+                      "color": "#ff5630"
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -935,7 +948,7 @@
       "customfield_10016": null,
       "customfield_10259": null,
       "customfield_10017": null,
-      "customfield_10019": "0|i03jth:",
+      "customfield_10019": "0|i03kct:",
       "customfield_10250": null,
       "customfield_10251": null,
       "customfield_10252": null,

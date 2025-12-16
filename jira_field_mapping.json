@@ -42,13 +42,6 @@
     }
   },
   {
-    "type": "system",
-    "fieldId": "attachment",
-    "syncDirection": "BIDIRECTIONAL",
-    "strategy": "MERGE",
-    "note": "attachment filed need to be synced with merge method, ensuring both sides have the union of all attachments"
-  },
-  {
     "type": "custom",
     "description": "Severity -> Severity",
     "sourceFieldId": "customfield_10037",
@@ -86,7 +79,8 @@
     "sourceFieldId": "description",
     "targetFieldId": "customfield_10262",
     "syncDirection": "S2T",
-    "strategy": "DIRECT_COPY"
+    "strategy": "DIRECT_COPY",
+    "prefix": "[STARC@Jira]"
   },
   {
     "type": "custom",

@@ -17,7 +17,7 @@ MAPPING_FILE = "jira_field_mapping.json"
 
 # Debug 模式設定，當DEBUG_MODE為True時：
 #     1. 會使用Test類型查詢Source Issues，並使用Bug類型創建Target Issue
-#     2. 只處理 source issue key 為 [projectkey]-27940 的這一筆
+#     2. 只處理 source issue key 為 [projectkey]-27979 的這一筆
 DEBUG_MODE = True
 
 # 從 jira_config.json 讀取設定
@@ -255,6 +255,136 @@ class FieldProcessor:
     def __init__(self, mapping_config):
         self.mapping_config = mapping_config
 
+    def adf_to_text(self, adf_content):
+        """將 ADF (Atlassian Document Format) 格式轉換為純文本字符串"""
+        if not isinstance(adf_content, dict):
+            return None
+        
+        # 檢查是否為 ADF 格式（通常有 type: "doc" 和 content 字段）
+        if adf_content.get('type') == 'doc' and 'content' in adf_content:
+            text_parts = []
+            self._extract_text_from_adf(adf_content.get('content', []), text_parts)
+            return '\n'.join(text_parts)
+        
+        return None
+    
+    def _extract_text_from_adf(self, content, text_parts):
+        """遞歸提取 ADF content 中的文本"""
+        if not isinstance(content, list):
+            return
+        
+        for item in content:
+            if isinstance(item, dict):
+                # 如果是文本節點，提取文本
+                if item.get('type') == 'text' and 'text' in item:
+                    text_parts.append(item['text'])
+                # 如果是段落或其他容器，遞歸處理
+                elif 'content' in item:
+                    self._extract_text_from_adf(item['content'], text_parts)
+                # 處理硬換行
+                elif item.get('type') == 'hardBreak':
+                    text_parts.append('\n')
+    
+    def text_to_adf(self, text):
+        """將純文本字符串轉換為 ADF (Atlassian Document Format) 格式"""
+        if not isinstance(text, str):
+            return None
+        
+        # 如果文本為空，返回空的 ADF 文檔
+        if not text.strip():
+            return {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": []
+                    }
+                ]
+            }
+        
+        # 按換行符分割文本，每個非空行作為一個段落
+        lines = [line for line in text.split('\n') if line.strip()]
+        
+        if not lines:
+            return {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": []
+                    }
+                ]
+            }
+        
+        # 為每個非空行創建一個段落
+        paragraphs = []
+        for line in lines:
+            paragraphs.append({
+                "type": "paragraph",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": line
+                    }
+                ]
+            })
+        
+        return {
+            "type": "doc",
+            "version": 1,
+            "content": paragraphs
+        }
+    
+    def add_prefix_to_adf(self, adf_content, prefix):
+        """在 ADF 格式的第一個文本節點前添加 prefix"""
+        if not isinstance(adf_content, dict) or adf_content.get('type') != 'doc':
+            return None
+        
+        # 深拷貝 ADF 結構
+        import copy
+        new_adf = copy.deepcopy(adf_content)
+        
+        # 找到第一個段落的第一個文本節點
+        content = new_adf.get('content', [])
+        for paragraph in content:
+            if paragraph.get('type') == 'paragraph':
+                para_content = paragraph.get('content', [])
+                # 找到第一個文本節點
+                for i, item in enumerate(para_content):
+                    if item.get('type') == 'text':
+                        text = item.get('text', '')
+                        # 檢查是否已有 prefix
+                        if not text.startswith(prefix):
+                            # 在第一個文本節點前插入 prefix 文本節點
+                            prefix_node = {
+                                "type": "text",
+                                "text": f"{prefix} "
+                            }
+                            para_content.insert(i, prefix_node)
+                        return new_adf
+        
+        # 如果沒有找到文本節點，在第一個段落中添加 prefix 和文本
+        if content and content[0].get('type') == 'paragraph':
+            content[0].setdefault('content', []).insert(0, {
+                "type": "text",
+                "text": f"{prefix} "
+            })
+        else:
+            # 創建新段落
+            new_adf['content'] = [{
+                "type": "paragraph",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"{prefix} "
+                    }
+                ]
+            }]
+        
+        return new_adf
+
     def format_field_value(self, field_value, config_item):
         """根據字段類型格式化字段值"""
         target_field_id = config_item.get('targetFieldId', '')
@@ -409,10 +539,19 @@ class FieldProcessor:
                 if src_val is not None:
                     target_val = self.resolve_value(src_val, item, "S2T")
                     if target_val is not None:
-                        # 處理 summary 字段的前缀（從配置中讀取）
-                        if field_type == 'system' and source_field == 'summary':
-                            prefix = item.get('prefix', '')
-                            if prefix and isinstance(target_val, str):
+                        # 處理字段的前缀（從配置中讀取，支援所有 S2T 方向的字段）
+                        prefix = item.get('prefix', '')
+                        if prefix:
+                            # 如果值是 ADF 格式（字典），直接在 ADF 中添加 prefix
+                            if isinstance(target_val, dict) and target_val.get('type') == 'doc':
+                                # 保存原始值以便回退
+                                original_adf = target_val
+                                target_val = self.add_prefix_to_adf(target_val, prefix)
+                                if target_val is None:
+                                    # 如果添加失敗，直接使用原始的 ADF 內容
+                                    target_val = original_adf
+                            # 處理字符串類型的 prefix
+                            elif isinstance(target_val, str):
                                 # 檢查是否已經有前缀
                                 if not target_val.startswith(prefix):
                                     target_val = f'{prefix} {target_val}'
@@ -481,10 +620,19 @@ class FieldProcessor:
                     if src_val is not None:
                         val = self.resolve_value(src_val, item, "S2T")
                         if val is not None:
-                            # 處理 summary 字段的前缀（從配置中讀取）
-                            if field_type == 'system' and source_field == 'summary':
-                                prefix = item.get('prefix', '')
-                                if prefix and isinstance(val, str):
+                            # 處理字段的前缀（從配置中讀取，支援所有 S2T 方向的字段）
+                            prefix = item.get('prefix', '')
+                            if prefix:
+                                # 如果值是 ADF 格式（字典），直接在 ADF 中添加 prefix
+                                if isinstance(val, dict) and val.get('type') == 'doc':
+                                    # 保存原始值以便回退
+                                    original_adf = val
+                                    val = self.add_prefix_to_adf(val, prefix)
+                                    if val is None:
+                                        # 如果添加失敗，直接使用原始的 ADF 內容
+                                        val = original_adf
+                                # 處理字符串類型的 prefix
+                                elif isinstance(val, str):
                                     # 檢查是否已經有前缀
                                     if not val.startswith(prefix):
                                         val = f'{prefix} {val}'
@@ -799,7 +947,7 @@ def run_sync():
         print("  [DEBUG MODE 已啟用]")
         print("    - Source 查詢類型: Test")
         print("    - Target 創建類型: Bug")
-        print("    - 只處理 issue key: [projectkey]-27940")
+        print("    - 只處理 issue key: [projectkey]-27979")
     print("=" * 80)
     print()
 
@@ -854,7 +1002,8 @@ def run_sync():
         issue_type_filter = " OR ".join([f'issuetype = "{it}"' for it in sync_issue_types])
         jql_parts.append(f"({issue_type_filter})")
     
-    jql_parts.append("updated >= -1d")  # 最近1天更新的
+    if DEBUG_MODE:
+        jql_parts.append("updated >= -1d")  # 最近1天更新的
     
     # 構建 JQL：條件部分用 AND 連接，ORDER BY 單獨添加
     source_jql = " AND ".join(jql_parts) + " ORDER BY updated DESC"
@@ -865,7 +1014,7 @@ def run_sync():
     
     # Debug 模式：只處理指定的 issue key
     if DEBUG_MODE:
-        debug_issue_key = f"{source_project_key}-27940"
+        debug_issue_key = f"{source_project_key}-27979"
         print(f"  [DEBUG MODE] 過濾只處理 issue key: {debug_issue_key}")
         filtered_issues = [issue for issue in source_issues if issue.get('key') == debug_issue_key]
         if filtered_issues:
@@ -927,7 +1076,7 @@ def run_sync():
                 print(f"  [DEBUG MODE] 使用 Bug 類型創建 Target Issue")
             else:
                 # 正式模式：從 source issue 取得 issue type 或使用預設值
-                issue_type = s_issue['fields'].get('issuetype', {}).get('name', 'Task')
+                issue_type = s_issue['fields'].get('issuetype', {}).get('name', 'Bug')
             
             payload = processor.prepare_create_payload(
                 s_issue, 
@@ -1046,87 +1195,15 @@ def run_sync():
                         for field_id, error_msg in failed_fields.items():
                             print(f"      - {field_id}: {error_msg[:200]}")
                 
-                # 同步附件到新創建的 issue（只從 source 同步到 target，使用 MERGE 策略的命名規則）
-                source_attachments = s_issue.get('fields', {}).get('attachment', [])
-                if source_attachments:
-                    print(f"  -> 同步附件到新創建的 Issue...")
-                    local_dir = ensure_local_attachment_dir(new_key)
-                    
-                    # 取得本地檔案清單（去除 prefix 後的名稱）
-                    local_attachments = get_local_attachments(local_dir)
-                    local_attachments_set = set(local_attachments)
-                    
-                    # 取得目標 issue 的附件列表（用於檢查是否已存在）
-                    target_attachments = target_jira.get_issue_attachments(new_key)
-                    target_attachment_map = {}
-                    for t_att in target_attachments:
-                        t_filename = t_att.get('filename', '')
-                        t_clean_name = remove_prefix_from_filename(t_filename)
-                        target_attachment_map[t_clean_name] = t_att
-                    
-                    for attachment in source_attachments:
-                        filename = attachment.get('filename', '')
-                        clean_name = remove_prefix_from_filename(filename)
-                        
-                        # 檢查本地是否已有該檔案（去除 prefix 後比較）
-                        if clean_name not in local_attachments_set:
-                            print(f"    下載 Source 附件: {filename}")
-                            local_path = download_attachment_to_local(
-                                source_jira, attachment, local_dir,
-                                source_project_key
-                            )
-                            if local_path:
-                                # 下載成功後，更新本地檔案清單
-                                local_attachments_set.add(clean_name)
-                        else:
-                            print(f"    跳過下載 Source 附件（本地已存在）: {filename}")
-                            # 如果本地已存在，取得本地文件路徑
-                            local_filename = get_filename_with_prefix(filename, source_project_key)
-                            local_path = os.path.join(local_dir, local_filename)
-                        
-                        # 檢查目標 issue 是否已有該附件（去除 prefix 後比較）
-                        if clean_name in target_attachment_map:
-                            t_existing = target_attachment_map[clean_name].get('filename', '')
-                            print(f"    跳過上傳 Source 附件到 Target（目標已存在）: {filename} (目標已有: {t_existing})")
-                            continue
-                        
-                        if os.path.exists(local_path):
-                            # 上傳到 target，文件名加上 [SOURCE_PROJECT_KEY] prefix（MERGE 策略）
-                            prefixed_filename = get_filename_with_prefix(filename, source_project_key)
-                            print(f"    上傳附件到 Target: {prefixed_filename}")
-                            
-                            # 如果本地文件已經有正確的 prefix 文件名，直接使用
-                            # 否則創建臨時檔案
-                            if os.path.basename(local_path) == prefixed_filename:
-                                # 文件名相同，直接使用本地文件
-                                upload_path = local_path
-                            else:
-                                # 創建臨時檔案使用帶 prefix 的檔名
-                                import tempfile
-                                # 使用系統臨時目錄，避免文件鎖定問題
-                                temp_dir = tempfile.gettempdir()
-                                temp_path = os.path.join(temp_dir, prefixed_filename)
-                                try:
-                                    shutil.copy2(local_path, temp_path)
-                                    upload_path = temp_path
-                                except PermissionError as e:
-                                    print(f"    警告: 無法複製檔案（可能被其他程序使用）: {str(e)}")
-                                    # 嘗試直接使用本地文件
-                                    upload_path = local_path
-                                except Exception as e:
-                                    print(f"    錯誤: 複製檔案時發生錯誤: {str(e)}")
-                                    continue
-                            
-                            # 上傳附件
-                            if target_jira.upload_attachment(new_key, upload_path):
-                                # 如果使用了臨時文件，刪除它
-                                if upload_path != local_path and os.path.exists(upload_path):
-                                    try:
-                                        os.remove(upload_path)
-                                    except Exception as e:
-                                        print(f"    警告: 無法刪除臨時檔案: {str(e)}")
-                        else:
-                            print(f"    警告: 本地檔案不存在，無法上傳: {local_path}")
+                # 同步附件到新創建的 issue（使用 MERGE 策略）
+                # 創建一個只包含 key 的 target_issue 對象（sync_attachments 函數內部不使用此參數的其他字段）
+                new_target_issue = {'key': new_key}
+                sync_attachments(
+                    s_issue, new_target_issue, "S2T",
+                    source_jira, target_jira,
+                    source_project_key, target_project_key,
+                    new_key
+                )
         else:
             # Update
             t_issue = target_map[s_key]
