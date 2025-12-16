@@ -15,6 +15,7 @@
     "fieldId": "summary",
     "syncDirection": "S2T",
     "strategy": "DIRECT_COPY",
+    "prefix": "[MB-EAL]",
     "note": "Add prefix [MB-EAL] in the summary to indicate bug is coming from customer"
   },
   {
@@ -44,8 +45,8 @@
     "type": "system",
     "fieldId": "attachment",
     "syncDirection": "BIDIRECTIONAL",
-    "strategy": "DIRECT_COPY",
-    "note": "attachment filed need to be synced with perticular method"
+    "strategy": "MERGE",
+    "note": "attachment filed need to be synced with merge method, ensuring both sides have the union of all attachments"
   },
   {
     "type": "custom",
@@ -111,20 +112,22 @@
     "type": "custom",
     "description": "Customer Issue ID (Sync Metadata)",
     "sourceFieldId": null,
-    "targetFieldId": "customfield_10218",
+    "targetFieldId": "customfield_10221",
+    "targetFieldDataType": "string",
     "syncDirection": "S2T",
     "strategy": "SYNC_METADATA",
     "metadataType": "customer_issue_id",
-    "note": "Stores the source issue key/ID for sync tracking"
+    "note": "Stores the source issue key/ID for sync tracking, the original name of customfield_10221 is Jama CR/PR ticket"
   },
   {
     "type": "custom",
     "description": "Last Sync Time (Sync Metadata)",
     "sourceFieldId": null,
     "targetFieldId": "customfield_10015",
+    "targetFieldDataType": "date",
     "syncDirection": "S2T",
     "strategy": "SYNC_METADATA",
     "metadataType": "last_sync_time",
-    "note": "Stores the timestamp of the last sync operation"
+    "note": "Stores the timestamp of the last sync operation, the original name of customfield_10015 is Start date"
   }
 ]

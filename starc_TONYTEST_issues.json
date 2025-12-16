@@ -14,11 +14,11 @@
         "customfield_16179": [],
         "customfield_10991": null,
         "statusCategory": {
-          "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/2",
-          "id": 2,
-          "key": "new",
-          "colorName": "blue-gray",
-          "name": "To Do"
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
         },
         "resolution": null,
         "customfield_11711": null,
@@ -35,7 +35,7 @@
           "id": "931357"
         },
         "customfield_16290": [],
-        "lastViewed": "2025-12-14T04:53:29.278+0100",
+        "lastViewed": "2025-12-16T06:57:22.124+0100",
         "customfield_16281": [],
         "customfield_17370": null,
         "customfield_16288": [],
@@ -336,17 +336,17 @@
           "id": "931535"
         },
         "status": {
-          "self": "https://mercedes-benz.atlassian.net/rest/api/3/status/10213",
+          "self": "https://mercedes-benz.atlassian.net/rest/api/3/status/3",
           "description": "",
-          "iconUrl": "https://mercedes-benz.atlassian.net/images/icons/statuses/generic.png",
-          "name": "NEW",
-          "id": "10213",
+          "iconUrl": "https://mercedes-benz.atlassian.net/images/icons/statuses/inprogress.png",
+          "name": "In Progress",
+          "id": "3",
           "statusCategory": {
-            "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/2",
-            "id": 2,
-            "key": "new",
-            "colorName": "blue-gray",
-            "name": "To Do"
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/statuscategory/4",
+            "id": 4,
+            "key": "indeterminate",
+            "colorName": "yellow",
+            "name": "In Progress"
           }
         },
         "customfield_27009": {
@@ -539,6 +539,7 @@
         "customfield_28602": null,
         "customfield_27636": null,
         "customfield_28603": null,
+        "customfield_29939": null,
         "customfield_27639": {
           "self": "https://mercedes-benz.atlassian.net/rest/api/3/customFieldOption/736062",
           "value": "Yes",
@@ -780,7 +781,7 @@
         "customfield_27206": [],
         "customfield_28659": null,
         "customfield_27689": null,
-        "updated": "2025-12-14T05:39:19.468+0100",
+        "updated": "2025-12-16T06:57:46.482+0100",
         "customfield_27205": null,
         "customfield_27208": [],
         "customfield_28657": null,
@@ -994,7 +995,7 @@
         },
         "customfield_28676": null,
         "customfield_27903": null,
-        "statuscategorychangedate": "2025-12-13T19:05:01.972+0100",
+        "statuscategorychangedate": "2025-12-15T09:50:43.769+0100",
         "customfield_17663": [],
         "fixVersions": [],
         "customfield_10901": null,
@@ -1334,6 +1335,31 @@
             "mimeType": "image/jpeg",
             "content": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/content/2369246",
             "thumbnail": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/thumbnail/2369246"
+          },
+          {
+            "self": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/2400424",
+            "id": "2400424",
+            "filename": "CurrentWallpaper_250620_01.jpg",
+            "author": {
+              "self": "https://mercedes-benz.atlassian.net/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "emailAddress": "th.huang@carux.com",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+              },
+              "displayName": "TH Huang",
+              "active": true,
+              "timeZone": "Asia/Taipei",
+              "accountType": "atlassian"
+            },
+            "created": "2025-12-16T06:57:46.144+0100",
+            "size": 419522,
+            "mimeType": "image/jpeg",
+            "content": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/content/2400424",
+            "thumbnail": "https://mercedes-benz.atlassian.net/rest/api/3/attachment/thumbnail/2400424"
           }
         ],
         "customfield_27730": null,

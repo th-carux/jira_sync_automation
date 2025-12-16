@@ -256,133 +256,44 @@ def download_issue_attachments(base_url, issue, auth_type, api_token, email=None
     
     return downloaded_count
 
-def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_results=100):
+def get_issue_by_key(base_url, issue_key, auth_type, api_token, email=None):
     """
-    取得指定專案的所有 Issue 清單
-    使用 Jira Search API (新版本 /rest/api/3/search/jql) 來取得所有 issue
+    直接取得指定 Issue Key 的 Issue
+    使用 Jira Issue API 來取得單個 issue
     """
-    url = f"{base_url}/search/jql"
+    url = f"{base_url}/issue/{issue_key}"
     headers = get_auth_headers(auth_type, api_token, email)
 
-    all_issues = []
-    start_at = 0
-    total = 0
+    print(f"正在取得 Issue {issue_key}...")
 
-    print(f"正在取得專案 {project_key} 的 Issue...")
-    print(f"JQL 過濾條件: 建立時間小於1天，最多 {max_results} 筆")
-    print(f"代碼過濾條件: reporter 或 assignee 的 email 必須以 @carux.com 結尾")
-
-    while True:
-        # 使用 GET 方法，JQL 和參數作為查詢參數
-        # 先查詢建立時間小於1天的 issues（最多100筆）
-        jql_query = f'project = {project_key} AND created >= -1d ORDER BY created DESC'
+    try:
         params = {
-            "jql": jql_query,
-            "maxResults": max_results,
-            "startAt": start_at,
             "fields": "*all"  # 獲取所有字段，包括 custom field
         }
-
         response = requests.get(url, headers=headers, params=params)
 
-        if response.status_code != 200:
-            print(f"取得 Issue 清單失敗 (Status {response.status_code}): {response.text}")
-            break
+        if response.status_code == 200:
+            issue = response.json()
+            print(f"成功取得 Issue {issue_key}")
+            return [issue], 1
+        elif response.status_code == 404:
+            print(f"錯誤: 找不到 Issue {issue_key} (404 Not Found)")
+            return [], 0
+        else:
+            print(f"取得 Issue {issue_key} 失敗 (Status {response.status_code}): {response.text}")
+            return [], 0
+    except Exception as e:
+        print(f"取得 Issue {issue_key} 時發生錯誤: {str(e)}")
+        return [], 0
 
-        data = response.json()
-
-        # 只在第一次請求時打印完整的數據結構
-        if start_at == 0:
-            print("\n" + "=" * 80)
-            print("API 回應數據結構與內容:")
-            print("=" * 80)
-            print(f"JQL 查詢: {jql_query}")
-            print(f"請求 URL: {response.url}")
-            print(f"狀態碼: {response.status_code}")
-            print("\n完整 JSON 結構:")
-            print(json.dumps(data, indent=2, ensure_ascii=False))
-            print("\n數據結構分析:")
-            print(f"  - 頂層鍵值: {list(data.keys())}")
-            for key in data.keys():
-                value = data[key]
-                if isinstance(value, list):
-                    print(f"  - {key}: 列表，長度 = {len(value)}")
-                    if len(value) > 0:
-                        print(f"    第一個元素類型: {type(value[0])}")
-                        if isinstance(value[0], dict):
-                            print(f"    第一個元素的鍵: {list(value[0].keys())}")
-                elif isinstance(value, dict):
-                    print(f"  - {key}: 字典，鍵 = {list(value.keys())}")
-                else:
-                    print(f"  - {key}: {type(value).__name__} = {value}")
-            print("=" * 80 + "\n")
-
-        # 新版本 API 沒有 total 字段，從 issues 列表獲取
-        issues = data.get("issues", [])
-
-        if not issues:
-            break
-
-        all_issues.extend(issues)
-
-        # 由於沒有 total 字段，使用當前已取得的數量顯示進度
-        # 如果返回的 issues 數量等於 max_results，可能還有更多
-        print(f"已取得 {len(all_issues)} 個 Issue... (本批次: {len(issues)} 個)")
-
-        # 限制最多只取得 100 筆
-        if len(all_issues) >= max_results:
-            break
-
-        # 檢查是否還有更多 issue
-        # 如果返回的 issues 數量小於 max_results，說明已經取得所有資料
-        if len(issues) < max_results:
-            break
-
-        start_at += max_results
-
-    # 在代碼中過濾符合 email 條件的 issues
-    print(f"\n正在過濾符合 email 條件的 Issue...")
-    print(f"過濾前: {len(all_issues)} 個 Issue")
-
-    filtered_issues = []
-    for issue in all_issues:
-        fields = issue.get('fields', {})
-        assignee = fields.get('assignee')
-        reporter = fields.get('reporter')
-
-        assignee_email = assignee.get('emailAddress', '') if assignee else ''
-        reporter_email = reporter.get('emailAddress', '') if reporter else ''
-
-        # 檢查 assignee 或 reporter 的 email 是否以 @carux.com 結尾
-        if assignee_email.endswith('@carux.com') or reporter_email.endswith('@carux.com'):
-            filtered_issues.append(issue)
-
-    print(f"過濾後: {len(filtered_issues)} 個 Issue (reporter 或 assignee email 以 @carux.com 結尾)")
-
-    # 使用過濾後的 issues
-    all_issues = filtered_issues
-
-    # 根據 syncIssueType 過濾 issue type
-    if sync_issue_types:
-        print(f"\n正在過濾符合 syncIssueType 條件的 Issue...")
-        print(f"過濾前: {len(all_issues)} 個 Issue")
-        print(f"允許的 Issue Type: {sync_issue_types}")
-
-        type_filtered_issues = []
-        for issue in all_issues:
-            fields = issue.get('fields', {})
-            issue_type = fields.get('issuetype', {})
-            issue_type_name = issue_type.get('name', '') if issue_type else ''
-
-            # 檢查 issue type name 是否在 syncIssueType 列表中
-            if issue_type_name in sync_issue_types:
-                type_filtered_issues.append(issue)
-
-        print(f"過濾後: {len(type_filtered_issues)} 個 Issue (issue type 符合 syncIssueType 配置)")
-
-        # 使用過濾後的 issues
-        all_issues = type_filtered_issues
-    total = len(all_issues)
+def get_all_issues(base_url, project_key, auth_type, api_token, email=None, max_results=100):
+    """
+    取得指定 Issue Key 的 Issue
+    直接查詢 [projectkey]-27940
+    """
+    # 直接查詢指定的 issue key
+    issue_key = f"{project_key}-27940"
+    all_issues, total = get_issue_by_key(base_url, issue_key, auth_type, api_token, email)
 
     # 為每個 issue 補充 description、comments 和 attachments 資訊
     if total > 0:
@@ -555,8 +466,8 @@ def main():
         print("[警告] 專案不存在或無權限存取，無法繼續執行。請檢查 projectKey 配置是否正確。")
         return
 
-    # 2. 取得指定專案的所有 Issue
-    print(f"正在取得專案 {project_key} 的所有 Issue...")
+    # 2. 取得指定的 Issue
+    print(f"正在取得 Issue {project_key}-27940...")
     issues, total = get_all_issues(BASE_URL, project_key, auth_type, api_token, email)
 
     print()

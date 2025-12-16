@@ -1,10 +1,10 @@
 {
-  "id": "51141",
-  "key": "DM-17",
-  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51141",
+  "id": "51416",
+  "key": "DM-32",
+  "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51416",
   "fields": {
     "systemFields": {
-      "statuscategorychangedate": "2025-12-15T17:35:20.704+0800",
+      "statuscategorychangedate": "2025-12-16T11:54:36.309+0800",
       "fixVersions": [],
       "statusCategory": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/2",
@@ -83,7 +83,7 @@
         "total": 0
       },
       "votes": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-17/votes",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-32/votes",
         "votes": 0,
         "hasVoted": false
       },
@@ -122,20 +122,20 @@
       "resolutiondate": null,
       "workratio": -1,
       "watches": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-17/watchers",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-32/watchers",
         "watchCount": 1,
         "isWatching": true
       },
-      "created": "2025-12-15T17:35:20.489+0800",
-      "updated": "2025-12-15T17:40:01.773+0800",
+      "created": "2025-12-16T11:54:36.065+0800",
+      "updated": "2025-12-16T11:54:58.693+0800",
       "timeoriginalestimate": null,
       "description": null,
       "timetracking": {},
       "security": null,
       "attachment": [
         {
-          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29037",
-          "id": "29037",
+          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/29101",
+          "id": "29101",
           "filename": "CurrentWallpaper_241221_02.jpg",
           "author": {
             "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/user?accountId=712020%3Abaaba02f-01b5-44f2-9387-305c063a1f99",
@@ -152,11 +152,11 @@
             "timeZone": "Asia/Taipei",
             "accountType": "app"
           },
-          "created": "2025-12-15T17:35:38.638+0800",
+          "created": "2025-12-16T11:54:58.258+0800",
           "size": 2223816,
           "mimeType": "image/jpeg",
-          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29037",
-          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29037"
+          "content": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/content/29101",
+          "thumbnail": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/attachment/thumbnail/29101"
         }
       ],
       "summary": "[MB-EAL] 黑色野獸 Bête Noire",
@@ -164,7 +164,7 @@
       "duedate": null,
       "comment": {
         "comments": [],
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51141/comment",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51416/comment",
         "maxResults": 0,
         "total": 0,
         "startAt": 0
@@ -175,7 +175,7 @@
       "customfield_10870": null,
       "customfield_10475": null,
       "customfield_10233": null,
-      "customfield_10476": "2025-12-16T01:35:00.000+0800",
+      "customfield_10476": null,
       "customfield_10477": null,
       "customfield_10104": null,
       "customfield_10225": {
@@ -267,7 +267,7 @@
       },
       "customfield_10229": null,
       "customfield_10220": null,
-      "customfield_10221": null,
+      "customfield_10221": "TONYTEST-27940",
       "customfield_10101": "",
       "customfield_10102": 0.0,
       "customfield_10223": {
@@ -312,7 +312,11 @@
           }
         ]
       },
-      "customfield_10216": null,
+      "customfield_10216": {
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/customFieldOption/10146",
+        "value": "Customer test",
+        "id": "10146"
+      },
       "customfield_10217": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/customFieldOption/10149",
         "value": "Regular approach",
@@ -501,10 +505,7 @@
       "customfield_10311": null,
       "customfield_10036": null,
       "customfield_10312": null,
-      "customfield_10037": {
-        "id": 1,
-        "value": "Auto bottom up"
-      },
+      "customfield_10037": null,
       "customfield_10027": null,
       "customfield_10302": null,
       "customfield_10544": null,
@@ -655,7 +656,7 @@
       "customfield_10016": null,
       "customfield_10259": null,
       "customfield_10017": null,
-      "customfield_10019": "0|i03jet:",
+      "customfield_10019": "0|i03k19:",
       "customfield_10250": null,
       "customfield_10251": null,
       "customfield_10252": null,
@@ -664,7 +665,7 @@
       "customfield_10771": null,
       "customfield_10375": null,
       "customfield_10014": null,
-      "customfield_10015": null,
+      "customfield_10015": "2025-12-16",
       "customfield_10005": null,
       "customfield_10006": null,
       "customfield_10007": null,

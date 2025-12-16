@@ -15,7 +15,9 @@ from typing import Dict, List, Optional, Tuple
 CONFIG_FILE = "jira_config.json"
 MAPPING_FILE = "jira_field_mapping.json"
 
-# Debug 模式設定（可通過環境變數控制）
+# Debug 模式設定，當DEBUG_MODE為True時：
+#     1. 會使用Test類型查詢Source Issues，並使用Bug類型創建Target Issue
+#     2. 只處理 source issue key 為 [projectkey]-27940 的這一筆
 DEBUG_MODE = True
 
 # 從 jira_config.json 讀取設定
@@ -281,6 +283,13 @@ class FieldProcessor:
                 return field_value
             # 日期字段
             elif field_data_type in ['date', 'datetime']:
+                # Jira 日期字段需要 YYYY-MM-DD 格式，如果是 ISO 8601 格式，只取日期部分
+                if isinstance(field_value, str):
+                    # 如果是 ISO 8601 格式（包含 T），只取日期部分
+                    if 'T' in field_value:
+                        return field_value.split('T')[0]
+                    # 如果已經是日期格式，直接返回
+                    return field_value
                 return field_value
         
         # 如果沒有指定類型，根據字段 ID 推斷
@@ -400,13 +409,13 @@ class FieldProcessor:
                 if src_val is not None:
                     target_val = self.resolve_value(src_val, item, "S2T")
                     if target_val is not None:
-                        # 處理 summary 字段的前缀（根據 note）
+                        # 處理 summary 字段的前缀（從配置中讀取）
                         if field_type == 'system' and source_field == 'summary':
-                            note = item.get('note', '')
-                            if '[MB-EAL]' in note or 'prefix' in note.lower():
+                            prefix = item.get('prefix', '')
+                            if prefix and isinstance(target_val, str):
                                 # 檢查是否已經有前缀
-                                if isinstance(target_val, str) and not target_val.startswith('[MB-EAL]'):
-                                    target_val = f'[MB-EAL] {target_val}'
+                                if not target_val.startswith(prefix):
+                                    target_val = f'{prefix} {target_val}'
                         payload["fields"][target_field] = target_val
 
         return payload
@@ -472,13 +481,13 @@ class FieldProcessor:
                     if src_val is not None:
                         val = self.resolve_value(src_val, item, "S2T")
                         if val is not None:
-                            # 處理 summary 字段的前缀（根據 note）
+                            # 處理 summary 字段的前缀（從配置中讀取）
                             if field_type == 'system' and source_field == 'summary':
-                                note = item.get('note', '')
-                                if '[MB-EAL]' in note or 'prefix' in note.lower():
+                                prefix = item.get('prefix', '')
+                                if prefix and isinstance(val, str):
                                     # 檢查是否已經有前缀
-                                    if isinstance(val, str) and not val.startswith('[MB-EAL]'):
-                                        val = f'[MB-EAL] {val}'
+                                    if not val.startswith(prefix):
+                                        val = f'{prefix} {val}'
                             update_fields[target_field] = val
 
             elif direction == "T2S":
@@ -585,8 +594,8 @@ def sync_attachments(
     target_project_key: str,
     target_issue_key: str
 ):
-    """同步附件"""
-    print(f"  -> 同步附件...")
+    """同步附件 - MERGE 策略：確保兩邊都有完整的附件並集"""
+    print(f"  -> 同步附件 (MERGE 策略)...")
     
     # 確保本地目錄存在
     local_dir = ensure_local_attachment_dir(target_issue_key)
@@ -595,93 +604,192 @@ def sync_attachments(
     source_attachments = source_jira.get_issue_attachments(source_issue['key'])
     target_attachments = target_jira.get_issue_attachments(target_issue_key)
     
+    # 構建附件映射：以去除 prefix 後的檔案名為 key
+    # 用於快速查找附件是否存在
+    source_attachment_map = {}  # {clean_name: attachment}
+    target_attachment_map = {}   # {clean_name: attachment}
+    
+    for attachment in source_attachments:
+        filename = attachment.get('filename', '')
+        clean_name = remove_prefix_from_filename(filename)
+        source_attachment_map[clean_name] = attachment
+    
+    for attachment in target_attachments:
+        filename = attachment.get('filename', '')
+        clean_name = remove_prefix_from_filename(filename)
+        target_attachment_map[clean_name] = attachment
+    
     # 取得本地已存在的附件（去除 prefix 後的名稱）
     local_attachments = get_local_attachments(local_dir)
     
-    # 下載 source 附件到本地（如果尚未存在）
+    # 下載所有附件到本地（如果尚未存在）
+    # 先取得本地檔案清單（去除 prefix 後的名稱）
+    local_attachments_set = set(local_attachments)
+    
     for attachment in source_attachments:
         filename = attachment.get('filename', '')
         clean_name = remove_prefix_from_filename(filename)
         
-        # 檢查本地是否已有該檔案
-        if clean_name not in local_attachments:
+        # 檢查本地是否已有該檔案（去除 prefix 後比較）
+        if clean_name not in local_attachments_set:
             print(f"    下載 Source 附件: {filename}")
-            download_attachment_to_local(
+            local_path = download_attachment_to_local(
                 source_jira, attachment, local_dir,
                 source_project_key
             )
+            if local_path:
+                # 下載成功後，更新本地檔案清單
+                local_attachments_set.add(clean_name)
+        else:
+            print(f"    跳過下載 Source 附件（本地已存在）: {filename}")
     
-    # 下載 target 附件到本地（如果尚未存在）
     for attachment in target_attachments:
         filename = attachment.get('filename', '')
         clean_name = remove_prefix_from_filename(filename)
         
-        # 檢查本地是否已有該檔案
-        if clean_name not in local_attachments:
+        # 檢查本地是否已有該檔案（去除 prefix 後比較）
+        if clean_name not in local_attachments_set:
             print(f"    下載 Target 附件: {filename}")
-            download_attachment_to_local(
+            local_path = download_attachment_to_local(
                 target_jira, attachment, local_dir,
                 target_project_key
             )
+            if local_path:
+                # 下載成功後，更新本地檔案清單
+                local_attachments_set.add(clean_name)
+        else:
+            print(f"    跳過下載 Target 附件（本地已存在）: {filename}")
     
-    # 同步附件到對應的 Jira Issue
-    if direction == "S2T":
-        # 將 source 的附件上傳到 target
-        for attachment in source_attachments:
-            filename = attachment.get('filename', '')
-            clean_name = remove_prefix_from_filename(filename)
-            
-            # 檢查 target 是否已有該附件（去除 prefix 後比較）
-            target_has_attachment = False
-            for t_att in target_attachments:
-                t_clean_name = remove_prefix_from_filename(t_att.get('filename', ''))
+    # MERGE 策略：確保兩邊都有完整的附件並集
+    # 1. 將 source 中缺少的附件上傳到 target（文件名加上 [SOURCE_PROJECT_KEY] prefix）
+    for attachment in source_attachments:
+        filename = attachment.get('filename', '')
+        clean_name = remove_prefix_from_filename(filename)
+        
+        # 檢查 target 是否已有該附件（去除 prefix 後比較）
+        if clean_name not in target_attachment_map:
+            # 在上傳前，再次檢查目標 issue 是否已有該附件（可能在上傳過程中已添加）
+            # 重新獲取目標 issue 的附件列表
+            current_target_attachments = target_jira.get_issue_attachments(target_issue_key)
+            target_has_file = False
+            for t_att in current_target_attachments:
+                t_filename = t_att.get('filename', '')
+                t_clean_name = remove_prefix_from_filename(t_filename)
                 if t_clean_name == clean_name:
-                    target_has_attachment = True
+                    target_has_file = True
+                    print(f"    跳過上傳 Source 附件到 Target（目標已存在）: {filename} (目標已有: {t_filename})")
                     break
             
-            if not target_has_attachment:
-                # 從本地取得檔案（加上 project key prefix）
-                local_filename = get_filename_with_prefix(filename, source_project_key)
-                local_path = os.path.join(local_dir, local_filename)
+            if target_has_file:
+                continue
+            
+            # 從本地取得檔案（加上 project key prefix）
+            local_filename = get_filename_with_prefix(filename, source_project_key)
+            local_path = os.path.join(local_dir, local_filename)
+            
+            if os.path.exists(local_path):
+                # 上傳到 target，文件名加上 [SOURCE_PROJECT_KEY] prefix
+                prefixed_filename = get_filename_with_prefix(filename, source_project_key)
+                print(f"    上傳附件到 Target: {prefixed_filename}")
                 
-                if os.path.exists(local_path):
-                    # 上傳到 target，使用原始檔名（不含 prefix）
-                    print(f"    上傳附件到 Target: {filename}")
-                    # 創建臨時檔案使用原始檔名
-                    temp_path = os.path.join(local_dir, filename)
+                # 如果本地文件已經有正確的 prefix 文件名，直接使用
+                # 否則創建臨時檔案
+                if os.path.basename(local_path) == prefixed_filename:
+                    # 文件名相同，直接使用本地文件
+                    upload_path = local_path
+                else:
+                    # 創建臨時檔案使用帶 prefix 的檔名
                     import shutil
-                    shutil.copy2(local_path, temp_path)
-                    target_jira.upload_attachment(target_issue_key, temp_path)
-                    os.remove(temp_path)  # 刪除臨時檔案
+                    import tempfile
+                    # 使用系統臨時目錄，避免文件鎖定問題
+                    temp_dir = tempfile.gettempdir()
+                    temp_path = os.path.join(temp_dir, prefixed_filename)
+                    try:
+                        shutil.copy2(local_path, temp_path)
+                        upload_path = temp_path
+                    except PermissionError as e:
+                        print(f"    警告: 無法複製檔案（可能被其他程序使用）: {str(e)}")
+                        # 嘗試直接使用本地文件
+                        upload_path = local_path
+                    except Exception as e:
+                        print(f"    錯誤: 複製檔案時發生錯誤: {str(e)}")
+                        continue
+                
+                # 上傳附件
+                if target_jira.upload_attachment(target_issue_key, upload_path):
+                    # 如果使用了臨時文件，刪除它
+                    if upload_path != local_path and os.path.exists(upload_path):
+                        try:
+                            os.remove(upload_path)
+                        except Exception as e:
+                            print(f"    警告: 無法刪除臨時檔案: {str(e)}")
+            else:
+                print(f"    警告: 本地檔案不存在，無法上傳: {local_path}")
     
-    elif direction == "T2S":
-        # 將 target 的附件上傳到 source
-        for attachment in target_attachments:
-            filename = attachment.get('filename', '')
-            clean_name = remove_prefix_from_filename(filename)
-            
-            # 檢查 source 是否已有該附件（去除 prefix 後比較）
-            source_has_attachment = False
-            for s_att in source_attachments:
-                s_clean_name = remove_prefix_from_filename(s_att.get('filename', ''))
+    # 2. 將 target 中缺少的附件上傳到 source（文件名加上 [TARGET_PROJECT_KEY] prefix）
+    for attachment in target_attachments:
+        filename = attachment.get('filename', '')
+        clean_name = remove_prefix_from_filename(filename)
+        
+        # 檢查 source 是否已有該附件（去除 prefix 後比較）
+        if clean_name not in source_attachment_map:
+            # 在上傳前，再次檢查源 issue 是否已有該附件（可能在上傳過程中已添加）
+            # 重新獲取源 issue 的附件列表
+            current_source_attachments = source_jira.get_issue_attachments(source_issue['key'])
+            source_has_file = False
+            for s_att in current_source_attachments:
+                s_filename = s_att.get('filename', '')
+                s_clean_name = remove_prefix_from_filename(s_filename)
                 if s_clean_name == clean_name:
-                    source_has_attachment = True
+                    source_has_file = True
+                    print(f"    跳過上傳 Target 附件到 Source（目標已存在）: {filename} (目標已有: {s_filename})")
                     break
             
-            if not source_has_attachment:
-                # 從本地取得檔案（加上 project key prefix）
-                local_filename = get_filename_with_prefix(filename, target_project_key)
-                local_path = os.path.join(local_dir, local_filename)
+            if source_has_file:
+                continue
+            
+            # 從本地取得檔案（加上 project key prefix）
+            local_filename = get_filename_with_prefix(filename, target_project_key)
+            local_path = os.path.join(local_dir, local_filename)
+            
+            if os.path.exists(local_path):
+                # 上傳到 source，文件名加上 [TARGET_PROJECT_KEY] prefix
+                prefixed_filename = get_filename_with_prefix(filename, target_project_key)
+                print(f"    上傳附件到 Source: {prefixed_filename}")
                 
-                if os.path.exists(local_path):
-                    # 上傳到 source，使用原始檔名（不含 prefix）
-                    print(f"    上傳附件到 Source: {filename}")
-                    # 創建臨時檔案使用原始檔名
-                    temp_path = os.path.join(local_dir, filename)
+                # 如果本地文件已經有正確的 prefix 文件名，直接使用
+                # 否則創建臨時檔案
+                if os.path.basename(local_path) == prefixed_filename:
+                    # 文件名相同，直接使用本地文件
+                    upload_path = local_path
+                else:
+                    # 創建臨時檔案使用帶 prefix 的檔名
                     import shutil
-                    shutil.copy2(local_path, temp_path)
-                    source_jira.upload_attachment(source_issue['key'], temp_path)
-                    os.remove(temp_path)  # 刪除臨時檔案
+                    import tempfile
+                    # 使用系統臨時目錄，避免文件鎖定問題
+                    temp_dir = tempfile.gettempdir()
+                    temp_path = os.path.join(temp_dir, prefixed_filename)
+                    try:
+                        shutil.copy2(local_path, temp_path)
+                        upload_path = temp_path
+                    except PermissionError as e:
+                        print(f"    警告: 無法複製檔案（可能被其他程序使用）: {str(e)}")
+                        # 嘗試直接使用本地文件
+                        upload_path = local_path
+                    except Exception as e:
+                        print(f"    錯誤: 複製檔案時發生錯誤: {str(e)}")
+                        continue
+                
+                # 上傳附件
+                if source_jira.upload_attachment(source_issue['key'], upload_path):
+                    # 如果使用了臨時文件，刪除它
+                    if upload_path != local_path and os.path.exists(upload_path):
+                        try:
+                            os.remove(upload_path)
+                        except Exception as e:
+                            print(f"    警告: 無法刪除臨時檔案: {str(e)}")
+            else:
+                print(f"    警告: 本地檔案不存在，無法上傳: {local_path}")
 
 def run_sync():
     """執行同步流程"""
@@ -691,6 +799,7 @@ def run_sync():
         print("  [DEBUG MODE 已啟用]")
         print("    - Source 查詢類型: Test")
         print("    - Target 創建類型: Bug")
+        print("    - 只處理 issue key: [projectkey]-27940")
     print("=" * 80)
     print()
 
@@ -753,6 +862,18 @@ def run_sync():
     
     source_issues = source_jira.search_issues(source_jql)
     print(f"  找到 {len(source_issues)} 個 Source Issues")
+    
+    # Debug 模式：只處理指定的 issue key
+    if DEBUG_MODE:
+        debug_issue_key = f"{source_project_key}-27940"
+        print(f"  [DEBUG MODE] 過濾只處理 issue key: {debug_issue_key}")
+        filtered_issues = [issue for issue in source_issues if issue.get('key') == debug_issue_key]
+        if filtered_issues:
+            source_issues = filtered_issues
+            print(f"  找到匹配的 Debug Issue: {debug_issue_key}")
+        else:
+            print(f"  警告: 未找到 issue key {debug_issue_key}，將處理所有找到的 issues")
+    
     print()
 
     # 2. 取得 Target Issues（根據 customer_issue_id 欄位）
@@ -925,28 +1046,87 @@ def run_sync():
                         for field_id, error_msg in failed_fields.items():
                             print(f"      - {field_id}: {error_msg[:200]}")
                 
-                # 同步附件到新創建的 issue（只從 source 同步到 target）
+                # 同步附件到新創建的 issue（只從 source 同步到 target，使用 MERGE 策略的命名規則）
                 source_attachments = s_issue.get('fields', {}).get('attachment', [])
                 if source_attachments:
                     print(f"  -> 同步附件到新創建的 Issue...")
                     local_dir = ensure_local_attachment_dir(new_key)
                     
+                    # 取得本地檔案清單（去除 prefix 後的名稱）
+                    local_attachments = get_local_attachments(local_dir)
+                    local_attachments_set = set(local_attachments)
+                    
+                    # 取得目標 issue 的附件列表（用於檢查是否已存在）
+                    target_attachments = target_jira.get_issue_attachments(new_key)
+                    target_attachment_map = {}
+                    for t_att in target_attachments:
+                        t_filename = t_att.get('filename', '')
+                        t_clean_name = remove_prefix_from_filename(t_filename)
+                        target_attachment_map[t_clean_name] = t_att
+                    
                     for attachment in source_attachments:
                         filename = attachment.get('filename', '')
-                        print(f"    下載 Source 附件: {filename}")
-                        local_path = download_attachment_to_local(
-                            source_jira, attachment, local_dir,
-                            source_project_key
-                        )
+                        clean_name = remove_prefix_from_filename(filename)
                         
-                        if local_path:
-                            # 上傳到 target，使用原始檔名（不含 prefix）
-                            print(f"    上傳附件到 Target: {filename}")
-                            # 創建臨時檔案使用原始檔名
-                            temp_path = os.path.join(local_dir, filename)
-                            shutil.copy2(local_path, temp_path)
-                            target_jira.upload_attachment(new_key, temp_path)
-                            os.remove(temp_path)  # 刪除臨時檔案
+                        # 檢查本地是否已有該檔案（去除 prefix 後比較）
+                        if clean_name not in local_attachments_set:
+                            print(f"    下載 Source 附件: {filename}")
+                            local_path = download_attachment_to_local(
+                                source_jira, attachment, local_dir,
+                                source_project_key
+                            )
+                            if local_path:
+                                # 下載成功後，更新本地檔案清單
+                                local_attachments_set.add(clean_name)
+                        else:
+                            print(f"    跳過下載 Source 附件（本地已存在）: {filename}")
+                            # 如果本地已存在，取得本地文件路徑
+                            local_filename = get_filename_with_prefix(filename, source_project_key)
+                            local_path = os.path.join(local_dir, local_filename)
+                        
+                        # 檢查目標 issue 是否已有該附件（去除 prefix 後比較）
+                        if clean_name in target_attachment_map:
+                            t_existing = target_attachment_map[clean_name].get('filename', '')
+                            print(f"    跳過上傳 Source 附件到 Target（目標已存在）: {filename} (目標已有: {t_existing})")
+                            continue
+                        
+                        if os.path.exists(local_path):
+                            # 上傳到 target，文件名加上 [SOURCE_PROJECT_KEY] prefix（MERGE 策略）
+                            prefixed_filename = get_filename_with_prefix(filename, source_project_key)
+                            print(f"    上傳附件到 Target: {prefixed_filename}")
+                            
+                            # 如果本地文件已經有正確的 prefix 文件名，直接使用
+                            # 否則創建臨時檔案
+                            if os.path.basename(local_path) == prefixed_filename:
+                                # 文件名相同，直接使用本地文件
+                                upload_path = local_path
+                            else:
+                                # 創建臨時檔案使用帶 prefix 的檔名
+                                import tempfile
+                                # 使用系統臨時目錄，避免文件鎖定問題
+                                temp_dir = tempfile.gettempdir()
+                                temp_path = os.path.join(temp_dir, prefixed_filename)
+                                try:
+                                    shutil.copy2(local_path, temp_path)
+                                    upload_path = temp_path
+                                except PermissionError as e:
+                                    print(f"    警告: 無法複製檔案（可能被其他程序使用）: {str(e)}")
+                                    # 嘗試直接使用本地文件
+                                    upload_path = local_path
+                                except Exception as e:
+                                    print(f"    錯誤: 複製檔案時發生錯誤: {str(e)}")
+                                    continue
+                            
+                            # 上傳附件
+                            if target_jira.upload_attachment(new_key, upload_path):
+                                # 如果使用了臨時文件，刪除它
+                                if upload_path != local_path and os.path.exists(upload_path):
+                                    try:
+                                        os.remove(upload_path)
+                                    except Exception as e:
+                                        print(f"    警告: 無法刪除臨時檔案: {str(e)}")
+                        else:
+                            print(f"    警告: 本地檔案不存在，無法上傳: {local_path}")
         else:
             # Update
             t_issue = target_map[s_key]
@@ -967,9 +1147,17 @@ def run_sync():
             direction = "NONE"
             
             if last_sync_time:
-                # 如果兩個 issue 的 updated 時間都早於 last_sync_time，不需要更新
+                # 如果兩個 issue 的 updated 時間都早於 last_sync_time，不需要更新欄位
+                # 但附件 MERGE 同步仍要執行
                 if s_time <= last_sync_time and t_time <= last_sync_time:
-                    print(f"  -> 跳過（上次同步後無變化，last_sync_time: {last_sync_time}）")
+                    print(f"  -> 跳過欄位更新（上次同步後無變化，last_sync_time: {last_sync_time}）")
+                    # 即使欄位無變化，也要執行附件 MERGE 同步
+                    sync_attachments(
+                        s_issue, t_issue, "NONE",
+                        source_jira, target_jira,
+                        source_project_key, target_project_key,
+                        t_key
+                    )
                     skipped_count += 1
                     continue
                 
@@ -986,7 +1174,14 @@ def run_sync():
                     direction = "T2S"
 
             if direction == "NONE":
-                print("  -> 跳過（時間相同）")
+                print("  -> 跳過欄位更新（時間相同）")
+                # 即使時間相同，也要執行附件 MERGE 同步
+                sync_attachments(
+                    s_issue, t_issue, direction,
+                    source_jira, target_jira,
+                    source_project_key, target_project_key,
+                    t_key
+                )
                 skipped_count += 1
                 continue
 
@@ -1008,16 +1203,18 @@ def run_sync():
                 elif direction == "T2S":
                     source_jira.update_issue(s_key, update_fields)
                     updated_count += 1
-                
-                # 同步附件
-                sync_attachments(
-                    s_issue, t_issue, direction,
-                    source_jira, target_jira,
-                    source_project_key, target_project_key,
-                    t_key
-                )
             else:
                 print("  -> 無需更新的欄位")
+            
+            # 同步附件（MERGE 策略：無論是否有欄位更新，都要執行附件同步）
+            sync_attachments(
+                s_issue, t_issue, direction,
+                source_jira, target_jira,
+                source_project_key, target_project_key,
+                t_key
+            )
+            
+            if not update_fields:
                 skipped_count += 1
 
     # 5. 顯示同步結果
