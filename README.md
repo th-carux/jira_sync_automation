@@ -16,6 +16,7 @@ A Python tool for synchronizing Jira issues between two Jira instances (Source a
 - **Multiple Authentication Methods**: Supports Basic Auth and Bearer Token
 - **Smart Update Logic**: Uses last sync time to determine sync direction and avoid unnecessary updates
 - **Skip No-Op Updates for Simple Fields**: For simple types (text/string, number, single-select option), the tool compares the new value with the current target value and skips the update if they are identical, reducing unnecessary API calls and churn
+- **Status Transition via API**: System `status` is updated using Jira Transition API (not direct field writes)
 
 ## Requirements
 
@@ -172,8 +173,12 @@ This file defines how fields are mapped and synchronized between Source and Targ
 2. **MAPPED_SYNC**: Map values using `valueMapping` dictionary. Supports bidirectional sync with `reverseMapping`
 3. **STATIC_VALUE**: Set a static value when creating or updating issues
 4. **SYNC_METADATA**: Automatically manage sync metadata:
-   - `customer_issue_id`: Stores source issue key in target issue
+   - `customer_issue_id`: Stores source issue key in target issue (JQL lookup prefers `targetFieldName` when configured; otherwise uses `targetFieldId`)
    - `last_sync_time`: Tracks when the last sync occurred
+
+**Status Field Mapping (Important)**:
+- When `status` uses `MAPPED_SYNC`, the strings in `valueMapping`/`reverseMapping` must match the exact Jira workflow status names (including case); otherwise the transition will fail or no valid transition will be found.
+- The examples in `jira_field_mapping.json` are illustrative only—adjust the mappings to your project's actual status names (including case).
 
 **Value comparison for simple fields:** For simple types (text/string, number, single-select option), the tool compares the candidate new value with the current value on the target side and skips the update if they are identical. Complex types (multi-select, objects, ADF, attachments) are still updated directly.
 
@@ -293,3 +298,4 @@ See `jira_config.json` and `jira_field_mapping.json` in the repository for compl
 2. **Field Update Failed**: Verify field IDs and data types match between source and target
 3. **Attachment Upload Failed**: Check file permissions and disk space
 4. **Prefix Not Applied**: Ensure field supports prefix (string or ADF format)
+5. **Status Not Updating**: Status changes use the Transition API; confirm the transition is available to the acting user and workflow

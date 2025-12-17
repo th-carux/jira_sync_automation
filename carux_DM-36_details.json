@@ -4,14 +4,14 @@
   "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495",
   "fields": {
     "systemFields": {
-      "statuscategorychangedate": "2025-12-16T23:57:48.650+0800",
+      "statuscategorychangedate": "2025-12-17T10:17:40.710+0800",
       "fixVersions": [],
       "statusCategory": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/2",
-        "id": 2,
-        "key": "new",
-        "colorName": "blue-gray",
-        "name": "To Do"
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/4",
+        "id": 4,
+        "key": "indeterminate",
+        "colorName": "yellow",
+        "name": "In Progress"
       },
       "resolution": null,
       "lastViewed": null,
@@ -28,17 +28,17 @@
       "issuelinks": [],
       "assignee": null,
       "status": {
-        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/status/10111",
+        "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/status/10196",
         "description": "",
-        "iconUrl": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/",
-        "name": "Backlog",
-        "id": "10111",
+        "iconUrl": "https://carux.atlassian.net/images/icons/statuses/generic.png",
+        "name": "Blocked",
+        "id": "10196",
         "statusCategory": {
-          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/2",
-          "id": 2,
-          "key": "new",
-          "colorName": "blue-gray",
-          "name": "To Do"
+          "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/statuscategory/4",
+          "id": 4,
+          "key": "indeterminate",
+          "colorName": "yellow",
+          "name": "In Progress"
         }
       },
       "components": [],
@@ -123,11 +123,11 @@
       "workratio": -1,
       "watches": {
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/DM-36/watchers",
-        "watchCount": 1,
+        "watchCount": 2,
         "isWatching": true
       },
       "created": "2025-12-16T23:57:48.299+0800",
-      "updated": "2025-12-16T23:58:01.472+0800",
+      "updated": "2025-12-17T10:17:40.858+0800",
       "timeoriginalestimate": null,
       "description": null,
       "timetracking": {},
@@ -163,10 +163,63 @@
       "environment": null,
       "duedate": null,
       "comment": {
-        "comments": [],
+        "comments": [
+          {
+            "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495/comment/44459",
+            "id": "44459",
+            "author": {
+              "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "emailAddress": "th.huang@carux.com",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+              },
+              "displayName": "TH Huang",
+              "active": true,
+              "timeZone": "Asia/Taipei",
+              "accountType": "atlassian"
+            },
+            "body": {
+              "type": "doc",
+              "version": 1,
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "change status to block to test sync result."
+                    }
+                  ]
+                }
+              ]
+            },
+            "updateAuthor": {
+              "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/user?accountId=712020%3A629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "accountId": "712020:629082f0-9bd4-4ea9-a090-136f2eedea27",
+              "emailAddress": "th.huang@carux.com",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:629082f0-9bd4-4ea9-a090-136f2eedea27/74f913ce-da59-4b83-9581-9a4dbbfad247/32"
+              },
+              "displayName": "TH Huang",
+              "active": true,
+              "timeZone": "Asia/Taipei",
+              "accountType": "atlassian"
+            },
+            "created": "2025-12-17T10:17:40.680+0800",
+            "updated": "2025-12-17T10:17:40.680+0800",
+            "jsdPublic": true
+          }
+        ],
         "self": "https://api.atlassian.com/ex/jira/2898dd07-2c42-4ceb-bcef-588e98eece1e/rest/api/3/issue/51495/comment",
-        "maxResults": 0,
-        "total": 0,
+        "maxResults": 1,
+        "total": 1,
         "startAt": 0
       }
     },
@@ -402,7 +455,21 @@
           }
         ]
       },
-      "customfield_10294": null,
+      "customfield_10294": {
+        "type": "doc",
+        "version": 1,
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Root Cause test from CarUX Jira"
+              }
+            ]
+          }
+        ]
+      },
       "customfield_10296": null,
       "customfield_10297": null,
       "customfield_10573": null,
@@ -505,7 +572,10 @@
       "customfield_10311": null,
       "customfield_10036": null,
       "customfield_10312": null,
-      "customfield_10037": null,
+      "customfield_10037": {
+        "id": 1,
+        "value": "Auto bottom up"
+      },
       "customfield_10027": null,
       "customfield_10302": null,
       "customfield_10544": null,
@@ -658,7 +728,7 @@
       "customfield_10540": null,
       "customfield_10023": null,
       "customfield_10541": null,
-      "customfield_10024": null,
+      "customfield_10024": "2025-12-17T10:17:40.680+0800",
       "customfield_10025": null,
       "customfield_10542": null,
       "customfield_10300": null,

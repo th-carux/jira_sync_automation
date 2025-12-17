@@ -195,6 +195,43 @@ class JiraClient:
                 self._handle_error(response, f"update_issue (key: {issue_key})")
             print(f"  [Error Update] {response.status_code}: {response.text}")
 
+    def get_transitions(self, issue_key):
+        """Get available transitions for an issue"""
+        url = f"{self.base_url}/issue/{issue_key}/transitions"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("transitions", [])
+        else:
+            self._handle_error(response, f"get_transitions (key: {issue_key})")
+            return []
+
+    def transition_issue(self, issue_key, status_name: str):
+        """Transition issue to the given status name"""
+        transitions = self.get_transitions(issue_key)
+        target_transition_id = None
+        for t in transitions:
+            # match by status name or transition name
+            to_status = t.get("to", {}).get("name")
+            trans_name = t.get("name")
+            if status_name and (status_name.lower() == (to_status or "").lower() or status_name.lower() == (trans_name or "").lower()):
+                target_transition_id = t.get("id")
+                break
+        if not target_transition_id:
+            print(f"  [Error Transition] No transition found to reach status '{status_name}' for {issue_key}")
+            return False
+
+        url = f"{self.base_url}/issue/{issue_key}/transitions"
+        payload = {"transition": {"id": target_transition_id}}
+        response = requests.post(url, headers=self.headers, json=payload)
+        if response.status_code == 204:
+            print(f"  [Transitioned] {issue_key} -> {status_name}")
+            return True
+        else:
+            self._handle_error(response, f"transition_issue (key: {issue_key}, status: {status_name})")
+            print(f"  [Error Transition] {response.status_code}: {response.text}")
+            return False
+
     def get_issue_attachments(self, issue_key):
         """Get all attachments of an Issue"""
         url = f"{self.base_url}/issue/{issue_key}"
@@ -620,6 +657,13 @@ class FieldProcessor:
                     if src_val is not None:
                         val = self.resolve_value(src_val, item, "S2T")
                         if val is not None:
+                            if field_type == 'system' and source_field == 'status':
+                                src_name = None
+                                if isinstance(src_val, dict):
+                                    src_name = src_val.get('name') or src_val.get('value')
+                                elif isinstance(src_val, str):
+                                    src_name = src_val
+                                print(f"    [Status S2T] source status: {src_name} -> mapped: {val}")
                             # Handle field prefix (read from config, supports all S2T direction fields)
                             prefix = item.get('prefix', '')
                             if prefix:
@@ -658,6 +702,13 @@ class FieldProcessor:
                     if tgt_val is not None:
                         val = self.resolve_value(tgt_val, item, "T2S")
                         if val is not None:
+                            if field_type == 'system' and target_field == 'status':
+                                tgt_name = None
+                                if isinstance(tgt_val, dict):
+                                    tgt_name = tgt_val.get('name') or tgt_val.get('value')
+                                elif isinstance(tgt_val, str):
+                                    tgt_name = tgt_val
+                                print(f"    [Status T2S] target status: {tgt_name} -> mapped: {val}")
                             update_fields[source_field] = val
 
         return update_fields
@@ -1267,6 +1318,20 @@ def run_sync():
                 skipped_count += 1
                 continue
 
+            # Debug: print current status on both sides before preparing updates
+            def _get_status_name(issue_obj):
+                st = issue_obj.get('fields', {}).get('status')
+                if isinstance(st, dict):
+                    return st.get('name') or st.get('value')
+                if isinstance(st, str):
+                    return st
+                return None
+
+            s_status_name = _get_status_name(s_issue)
+            t_status_name = _get_status_name(t_issue)
+            print(f"    Current status (Source): {s_status_name}")
+            print(f"    Current status (Target): {t_status_name}")
+
             # Prepare update fields
             update_fields = processor.prepare_update_payload(
                 s_issue,
@@ -1278,19 +1343,29 @@ def run_sync():
 
             if update_fields:
                 print(f"  -> Updating {t_key if direction == 'S2T' else s_key} ({direction})...")
-                print("    Update fields:")
-                for fid, fval in update_fields.items():
-                    try:
-                        printable_val = json.dumps(fval, ensure_ascii=False)
-                    except Exception:
-                        printable_val = str(fval)
-                    print(f"      {fid}: {printable_val}")
-                # Select corresponding Jira Client based on sync direction
+                # Handle status via transition API; others via field update
+                status_val = update_fields.pop("status", None)
+                if status_val:
+                    status_name = None
+                    if isinstance(status_val, dict):
+                        status_name = status_val.get("name") or status_val.get("value")
+                    elif isinstance(status_val, str):
+                        status_name = status_val
+                    print(f"    Status to transition: {status_name}")
+                # Only print status; skip printing custom field updates
                 if direction == "S2T":
-                    target_jira.update_issue(t_key, update_fields)
+                    if status_val:
+                        if status_name:
+                            target_jira.transition_issue(t_key, status_name)
+                    if update_fields:
+                        target_jira.update_issue(t_key, update_fields)
                     updated_count += 1
                 elif direction == "T2S":
-                    source_jira.update_issue(s_key, update_fields)
+                    if status_val:
+                        if status_name:
+                            source_jira.transition_issue(s_key, status_name)
+                    if update_fields:
+                        source_jira.update_issue(s_key, update_fields)
                     updated_count += 1
             else:
                 print("  -> No fields to update")

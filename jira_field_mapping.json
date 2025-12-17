@@ -39,7 +39,7 @@
       "IMPLEMENTED": "IMPLEMENTING",
       "FAILURE ACCEPTED": "CLOSED",
       "CANCELLED": "REJECTED",
-      "IN ANALYSIS": "IN PROGRESS"
+      "In Analysis": "IN PROGRESS"
     }
   },
   {
