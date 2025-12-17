@@ -662,12 +662,15 @@ class FieldProcessor:
 
         return update_fields
 
-def get_customer_issue_id_field(mappings: List[Dict]) -> Optional[str]:
-    """Get customer_issue_id field ID from mapping configuration"""
+def get_customer_issue_id_field_info(mappings: List[Dict]) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Get customer_issue_id field ID and Name from mapping configuration.
+    Returns (field_id, field_name). field_name may be None if not provided.
+    """
     for item in mappings:
         if item.get('strategy') == 'SYNC_METADATA' and item.get('metadataType') == 'customer_issue_id':
-            return item.get('targetFieldId')
-    return None
+            return item.get('targetFieldId'), item.get('targetFieldName')
+    return None, None
 
 def get_last_sync_time_field(mappings: List[Dict]) -> Optional[str]:
     """Get last_sync_time field ID from mapping configuration"""
@@ -961,7 +964,7 @@ def run_sync():
     processor = FieldProcessor(mappings)
     
     # Get sync metadata field IDs
-    customer_issue_id_field = get_customer_issue_id_field(mappings)
+    customer_issue_id_field, customer_issue_id_field_name = get_customer_issue_id_field_info(mappings)
     last_sync_time_field = get_last_sync_time_field(mappings)
     
     if not customer_issue_id_field:
@@ -1029,7 +1032,9 @@ def run_sync():
     print("[2] Getting Target Issues...")
     target_project_key = target_config.get("projectKey")
     
-    if customer_issue_id_field:
+    if customer_issue_id_field_name:
+        target_jql = f'project = {target_project_key} AND "{customer_issue_id_field_name}" is not EMPTY'
+    elif customer_issue_id_field:
         target_jql = f"project = {target_project_key} AND {customer_issue_id_field} is not EMPTY"
     else:
         # If no customer_issue_id field, get all issues
@@ -1273,6 +1278,13 @@ def run_sync():
 
             if update_fields:
                 print(f"  -> Updating {t_key if direction == 'S2T' else s_key} ({direction})...")
+                print("    Update fields:")
+                for fid, fval in update_fields.items():
+                    try:
+                        printable_val = json.dumps(fval, ensure_ascii=False)
+                    except Exception:
+                        printable_val = str(fval)
+                    print(f"      {fid}: {printable_val}")
                 # Select corresponding Jira Client based on sync direction
                 if direction == "S2T":
                     target_jira.update_issue(t_key, update_fields)

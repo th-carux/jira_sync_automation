@@ -38,7 +38,8 @@
       "BLOCKED": "IMPLEMENTING",
       "IMPLEMENTED": "IMPLEMENTING",
       "FAILURE ACCEPTED": "CLOSED",
-      "CANCELLED": "REJECTED"
+      "CANCELLED": "REJECTED",
+      "IN ANALYSIS": "IN PROGRESS"
     }
   },
   {
@@ -115,6 +116,7 @@
     "description": "Customer Issue ID (Sync Metadata)",
     "sourceFieldId": null,
     "targetFieldId": "customfield_10221",
+    "targetFieldName": "Jama CR/PR ticket",
     "targetFieldDataType": "string",
     "syncDirection": "S2T",
     "strategy": "SYNC_METADATA",

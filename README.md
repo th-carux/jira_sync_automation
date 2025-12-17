@@ -15,6 +15,7 @@ A Python tool for synchronizing Jira issues between two Jira instances (Source a
 - **Prefix Support**: Add prefixes to field values (e.g., `[MB-EAL]` to summary)
 - **Multiple Authentication Methods**: Supports Basic Auth and Bearer Token
 - **Smart Update Logic**: Uses last sync time to determine sync direction and avoid unnecessary updates
+- **Skip No-Op Updates for Simple Fields**: For simple types (text/string, number, single-select option), the tool compares the new value with the current target value and skips the update if they are identical, reducing unnecessary API calls and churn
 
 ## Requirements
 
@@ -173,6 +174,8 @@ This file defines how fields are mapped and synchronized between Source and Targ
 4. **SYNC_METADATA**: Automatically manage sync metadata:
    - `customer_issue_id`: Stores source issue key in target issue
    - `last_sync_time`: Tracks when the last sync occurred
+
+**Value comparison for simple fields:** For simple types (text/string, number, single-select option), the tool compares the candidate new value with the current value on the target side and skips the update if they are identical. Complex types (multi-select, objects, ADF, attachments) are still updated directly.
 
 #### Sync Directions
 
